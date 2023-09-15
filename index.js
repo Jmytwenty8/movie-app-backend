@@ -14,9 +14,3 @@ app.listen(serverConfigs.PORT, async (err, res) => {
   }
   await connect();
 });
-
-const user = await UserService.signIn({
-  email: "john@shailesh.com",
-  password: "asnfkjaadaslkajjafkljflajlfajlsjfajsk",
-});
-console.log(user);
