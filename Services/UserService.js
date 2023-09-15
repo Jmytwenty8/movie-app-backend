@@ -18,7 +18,7 @@ const signIn = async (data) => {
         statusCode: StatusCodes.BAD_REQUEST,
       });
     } else {
-      return user;
+      return user.toObject();
     }
   } catch (err) {
     throw err;
@@ -28,7 +28,7 @@ const signIn = async (data) => {
 const signUp = async (data) => {
   try {
     const user = await UserRepository.createUser(data);
-    return user;
+    return user.toObject();
   } catch (err) {
     throw err;
   }
@@ -37,15 +37,15 @@ const signUp = async (data) => {
 const removeUser = async (data) => {
   try {
     const response = await UserRepository.removeUser(data);
-    return response;
+    return response.toObject();
   } catch (err) {
     throw err;
   }
 };
 
-export const updateUser = async (filter, data) => {
+export const patchUser = async (data) => {
   try {
-    const user = await UserRepository.getUserByEmail(filter);
+    const user = await UserRepository.getUserByEmail({ email: data.email });
     if (!user) {
       throw new AppError({
         message: "Couldn't find the user",
@@ -55,13 +55,36 @@ export const updateUser = async (filter, data) => {
       if (data.password) {
         console.log("Initial" + data.password);
         data.password = await hashPassword(data.password);
-        console.log("After Hash" + data.password);
+      }
+      const response = await UserRepository.patchUser(
+        { email: user.email },
+        data
+      );
+      return response.toObject();
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
+const updateUser = async (data) => {
+  try {
+    const user = await UserRepository.getUserByEmail({ email: data.email });
+    if (!user) {
+      throw new AppError({
+        message: "Couldn't find the user",
+        statusCode: StatusCodes.BAD_REQUEST,
+      });
+    } else {
+      if (data.password) {
+        console.log("Initial" + data.password);
+        data.password = await hashPassword(data.password);
       }
       const response = await UserRepository.updateUser(
         { email: user.email },
         data
       );
-      return response;
+      return response.toObject();
     }
   } catch (err) {
     throw err;
@@ -73,4 +96,5 @@ export const UserService = {
   signUp,
   removeUser,
   updateUser,
+  patchUser,
 };

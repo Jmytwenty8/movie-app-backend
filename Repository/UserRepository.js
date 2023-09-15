@@ -16,6 +16,12 @@ const removeUser = async (user) => {
 };
 
 const updateUser = async (user, data) => {
+  await users.deleteOne(user);
+  const newUser = await users.create(data);
+  return newUser;
+};
+
+const patchUser = async (user, data) => {
   const newUser = await users.findOneAndUpdate(user, data);
   return newUser;
 };
@@ -25,4 +31,5 @@ export const UserRepository = {
   createUser,
   removeUser,
   updateUser,
+  patchUser,
 };
