@@ -7,7 +7,7 @@ const userSchemaObject = {
     type: "String",
     required: [true, "Name cannot be empty"],
   },
-  userType: {
+  role: {
     type: "String",
     enum: ["user", "admin"],
     default: "user",

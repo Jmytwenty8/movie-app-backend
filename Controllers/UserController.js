@@ -4,7 +4,6 @@ import { UserService } from "../Services/UserService.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
 import { createToken } from "../Utils/Auth.js";
-import { requireAuth } from "../Middlewares/AuthMiddleware.js";
 
 const signUp = async (req, res) => {
   try {
@@ -59,16 +58,14 @@ const signIn = async (req, res) => {
 };
 const removeUser = async (req, res) => {
   try {
-    requireAuth(req, res, async () => {
-      const response = await UserService.removeUser({
-        email: req.body.email,
-        password: req.body.password,
-      });
-
-      SuccessResponse.message = "User Removed";
-      SuccessResponse.data = response;
-      res.status(StatusCodes.OK).json(SuccessResponse);
+    const response = await UserService.removeUser({
+      email: req.body.email,
+      password: req.body.password,
     });
+
+    SuccessResponse.message = "User Removed";
+    SuccessResponse.data = response;
+    res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (err) {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
