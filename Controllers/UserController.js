@@ -3,6 +3,8 @@ import FailureResponse from "../Utils/FailureResponse.js";
 import { UserService } from "../Services/UserService.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
+import { createToken } from "../Utils/Auth.js";
+import { requireAuth } from "../Middlewares/AuthMiddleware.js";
 
 const signUp = async (req, res) => {
   try {
@@ -37,6 +39,10 @@ const signIn = async (req, res) => {
       password: req.body.password,
     });
     delete response.password;
+    const token = await createToken(response.email);
+    res.cookie("auth", token, {
+      httpOnly: true,
+    });
     SuccessResponse.message = "User SignedIn";
     SuccessResponse.data = response;
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -53,14 +59,16 @@ const signIn = async (req, res) => {
 };
 const removeUser = async (req, res) => {
   try {
-    const response = await UserService.removeUser({
-      email: req.body.email,
-      password: req.body.password,
+    requireAuth(req, res, async () => {
+      const response = await UserService.removeUser({
+        email: req.body.email,
+        password: req.body.password,
+      });
+
+      SuccessResponse.message = "User Removed";
+      SuccessResponse.data = response;
+      res.status(StatusCodes.OK).json(SuccessResponse);
     });
-    delete response.password;
-    SuccessResponse.message = "User Removed";
-    SuccessResponse.data = response;
-    res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (err) {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;

@@ -11,7 +11,10 @@ const createUser = async (data) => {
 };
 
 const removeUser = async (user) => {
-  const removedUser = await users.deleteOne(user);
+  const email = {
+    email: user.email,
+  };
+  const removedUser = await users.deleteOne(email);
   return removedUser;
 };
 

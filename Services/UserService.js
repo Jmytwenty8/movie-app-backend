@@ -37,7 +37,7 @@ const signUp = async (data) => {
 const removeUser = async (data) => {
   try {
     const response = await UserRepository.removeUser(data);
-    return response.toObject();
+    return response;
   } catch (err) {
     throw err;
   }

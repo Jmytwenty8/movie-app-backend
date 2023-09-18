@@ -5,7 +5,7 @@ import { serverConfigs } from "../Configs/server-config.js";
 const userSchemaObject = {
   name: {
     type: "String",
-    required: ["Name cannot be empty"],
+    required: [true, "Name cannot be empty"],
   },
   userType: {
     type: "String",
@@ -21,11 +21,11 @@ const userSchemaObject = {
     ],
     trim: true,
     lowercase: true,
-    required: ["Email cannot be empty"],
+    required: [true, "Email cannot be empty"],
   },
   number: {
     type: Number,
-    required: ["Number cannot be empty"],
+    required: [true, "Number cannot be empty"],
   },
   wallet: {
     type: Number,
@@ -33,7 +33,7 @@ const userSchemaObject = {
   },
   password: {
     type: String,
-    required: ["Password cannot be empty"],
+    required: [true, "Password cannot be empty"],
   },
 };
 
