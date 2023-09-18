@@ -25,17 +25,23 @@ export const tokenVerification = (req, res, next) => {
 
 export const authorizeUser = (role) => {
   return async (req, res, next) => {
-    const user = await UserRepository.getUserByEmail(req.body);
-    const tokenizedEmail = Jwt.verify(
-      req.cookies.auth,
-      serverConfigs.SECRET_KEY
-    );
-    if (user.role !== role && tokenizedEmail !== user.email) {
-      FailureResponse.message = "User not authorized to complete the task";
-      FailureResponse.error.StatusCodes = StatusCodes.FORBIDDEN;
-      return res.status(StatusCodes.FORBIDDEN).json(FailureResponse);
-    } else {
-      next();
+    try {
+      const user = await UserRepository.getUserByEmail(req.body);
+      const tokenizedEmail = Jwt.verify(
+        req.cookies.auth,
+        serverConfigs.SECRET_KEY
+      );
+      if (user.role !== role && tokenizedEmail !== user.email) {
+        FailureResponse.message = "User not authorized to complete the task";
+        FailureResponse.error.StatusCodes = StatusCodes.FORBIDDEN;
+        return res.status(StatusCodes.FORBIDDEN).json(FailureResponse);
+      } else {
+        next();
+      }
+    } catch (err) {
+      FailureResponse.message = "User not found";
+      FailureResponse.error.StatusCodes = StatusCodes.NOT_FOUND;
+      return res.status(StatusCodes.NOT_FOUND).json(FailureResponse);
     }
   };
 };
