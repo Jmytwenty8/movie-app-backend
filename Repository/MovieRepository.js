@@ -1,11 +1,11 @@
 import { movies } from "../Models/Movies.js";
 
 const getOneMovie = async (data) => {
-  const movie = await movies.findOne({ name: data.name });
+  const movie = await movies.findOne({ _id: data.id });
   return movie;
 };
 
-const getAllMovie = async () => {
+const getAllMovies = async () => {
   const moviesList = await movies.find({});
   return moviesList;
 };
@@ -16,10 +16,7 @@ const createMovie = async (data) => {
 };
 
 const removeMovie = async (data) => {
-  const movie = {
-    name: data.name,
-  };
-  const removedMovie = await movies.deleteOne(movie);
+  const removedMovie = await movies.deleteOne(data);
   return removedMovie;
 };
 
@@ -34,9 +31,9 @@ const patchMovie = async (movie, data) => {
   return newMovie;
 };
 
-export const UserRepository = {
+export const MovieRepository = {
   getOneMovie,
-  getAllMovie,
+  getAllMovies,
   createMovie,
   removeMovie,
   updateMovie,

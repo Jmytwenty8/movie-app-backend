@@ -23,7 +23,7 @@ export const tokenVerification = (req, res, next) => {
   });
 };
 
-export const authorizeUser = (role) => {
+export const authorizeUserForUserActions = (role) => {
   return async (req, res, next) => {
     try {
       const user = await UserRepository.getUserByEmail(req.body);
@@ -42,6 +42,24 @@ export const authorizeUser = (role) => {
       FailureResponse.message = "User not found";
       FailureResponse.error.StatusCodes = StatusCodes.NOT_FOUND;
       return res.status(StatusCodes.NOT_FOUND).json(FailureResponse);
+    }
+  };
+};
+
+export const authorizeUserForMovieActions = (role) => {
+  return async (req, res, next) => {
+    const tokenizedEmail = Jwt.verify(
+      req.cookies.auth,
+      serverConfigs.SECRET_KEY
+    );
+
+    const user = await UserRepository.getUserByEmail({ email: tokenizedEmail });
+    if (role !== user.role) {
+      FailureResponse.message = "User not authorized to complete the task";
+      FailureResponse.error.StatusCodes = StatusCodes.FORBIDDEN;
+      return res.status(StatusCodes.FORBIDDEN).json(FailureResponse);
+    } else {
+      next();
     }
   };
 };

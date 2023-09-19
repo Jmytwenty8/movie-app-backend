@@ -20,7 +20,7 @@ const getOneMovie = async (data) => {
 
 const getAllMovies = async () => {
   try {
-    const movieList = await MovieRepository.getAllMovies({});
+    const movieList = await MovieRepository.getAllMovies();
     if (!movieList) {
       throw new AppError({
         message: "No Movies Found",
@@ -51,11 +51,6 @@ const createMovie = async (data) => {
 const removeMovie = async (data) => {
   try {
     const removedMovie = await MovieRepository.removeMovie(data);
-    if (removedMovie.toObject().deletedCount === 0) {
-      throw new AppError({
-        message: "Movie was not deleted!",
-      });
-    }
     return removedMovie;
   } catch (err) {
     throw err;
@@ -102,7 +97,7 @@ const updateMovie = async (data) => {
   }
 };
 
-export const UserService = {
+export const MovieService = {
   getOneMovie,
   getAllMovies,
   createMovie,

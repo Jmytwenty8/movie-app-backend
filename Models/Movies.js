@@ -5,17 +5,14 @@ const schemaObject = {
     type: "string",
     required: [true, "Enter Movie Name"],
   },
-  image: {
-    type: "string",
-  },
   description: {
     type: "string",
   },
   imdb: {
-    type: number,
+    type: Number,
   },
   runtime: {
-    type: number,
+    type: Number,
   },
   actors: {
     type: ["string"],
