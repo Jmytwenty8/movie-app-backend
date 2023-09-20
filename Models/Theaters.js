@@ -9,12 +9,13 @@ const schemaObject = {
     type: String,
     required: [true, "Enter Location"],
   },
-  totalSeats: {
+  seats: {
+    type: Number,
+    default: 100,
+  },
+  price: {
     type: Number,
     default: 200,
-  },
-  movies: {
-    type: [mongoose.Schema.Types.ObjectId],
   },
 };
 

@@ -18,6 +18,22 @@ const getOneSeat = async (data) => {
   }
 };
 
+const getSeatIdByRowAndColumn = async (row, column) => {
+  try {
+    const seatId = await this.getSeatIdByRowAndColumn(row, column);
+    if (!seatId) {
+      throw new AppError({
+        message: "Couldn't find the Seat",
+        statusCode: StatusCodes.BAD_REQUEST,
+      });
+    } else {
+      return seat.toObject();
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
 const getAllSeats = async () => {
   try {
     const seatList = await SeatRepository.getAllSeats();
@@ -104,4 +120,5 @@ export const SeatService = {
   removeSeat,
   patchSeat,
   updateSeat,
+  getSeatIdByRowAndColumn,
 };

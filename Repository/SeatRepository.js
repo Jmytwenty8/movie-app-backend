@@ -10,6 +10,10 @@ const getAllSeats = async () => {
   return seatList;
 };
 
+const getSeatIdByRowAndColumn = async (row, column) => {
+  const seat = seats.find({ row: row, column: column });
+  return seat._id;
+};
 const createSeat = async (data) => {
   const seat = await seats.create(data);
   return seat;
@@ -38,4 +42,5 @@ export const SeatRepository = {
   removeSeat,
   updateSeat,
   patchSeat,
+  getSeatIdByRowAndColumn,
 };
