@@ -59,7 +59,7 @@ const removeTheater = async (data) => {
 
 export const patchTheater = async (data) => {
   try {
-    const theater = await TheaterRepository.getOneTheater({ name: data.name });
+    const theater = await TheaterRepository.getOneTheater({ _id: data.id });
     if (!theater) {
       throw new AppError({
         message: "Couldn't find the Theater",
@@ -67,7 +67,7 @@ export const patchTheater = async (data) => {
       });
     } else {
       const patchedTheater = await TheaterRepository.patchTheater(
-        { name: theater.name },
+        { _id: data.id },
         data
       );
       return patchedTheater.toObject();
@@ -79,7 +79,7 @@ export const patchTheater = async (data) => {
 
 const updateTheater = async (data) => {
   try {
-    const theater = await TheaterRepository.getOneTheater({ name: data.name });
+    const theater = await TheaterRepository.getOneTheater({ _id: data.id });
     if (!theater) {
       throw new AppError({
         message: "Couldn't find the Theater",
@@ -87,7 +87,7 @@ const updateTheater = async (data) => {
       });
     } else {
       const updatedTheater = await TheaterRepository.updateTheater(
-        { name: theater.name },
+        { _id: data.id },
         data
       );
       return updatedTheater.toObject();

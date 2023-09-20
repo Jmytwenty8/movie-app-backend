@@ -59,7 +59,7 @@ const removeShow = async (data) => {
 
 export const patchShow = async (data) => {
   try {
-    const show = await ShowRepository.getOneShow({ name: data.name });
+    const show = await ShowRepository.getOneShow({ _id: data.id });
     if (!show) {
       throw new AppError({
         message: "Couldn't find the show",
@@ -67,7 +67,7 @@ export const patchShow = async (data) => {
       });
     } else {
       const patchedShow = await ShowRepository.patchShow(
-        { name: show.name },
+        { _id: data.id },
         data
       );
       return patchedShow.toObject();
@@ -79,7 +79,7 @@ export const patchShow = async (data) => {
 
 const updateShow = async (data) => {
   try {
-    const show = await ShowRepository.getOneShow({ name: data.name });
+    const show = await ShowRepository.getOneShow({ _id: data.id });
     if (!show) {
       throw new AppError({
         message: "Couldn't find the show",
@@ -87,7 +87,7 @@ const updateShow = async (data) => {
       });
     } else {
       const updatedShow = await ShowRepository.updateShow(
-        { name: show.name },
+        { _id: data.id },
         data
       );
       return updatedShow.toObject();
