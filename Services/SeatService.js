@@ -59,7 +59,7 @@ const removeSeat = async (data) => {
 
 export const patchSeat = async (data) => {
   try {
-    const seat = await SeatRepository.getOneSeat({ name: data.name });
+    const seat = await SeatRepository.getOneSeat({ _id: data.id });
     if (!seat) {
       throw new AppError({
         message: "Couldn't find the seat",
@@ -67,7 +67,7 @@ export const patchSeat = async (data) => {
       });
     } else {
       const patchedSeat = await SeatRepository.patchSeat(
-        { name: seat.name },
+        { _id: data.id },
         data
       );
       return patchedSeat.toObject();
@@ -79,7 +79,7 @@ export const patchSeat = async (data) => {
 
 const updateSeat = async (data) => {
   try {
-    const seat = await SeatRepository.getOneSeat({ name: data.name });
+    const seat = await SeatRepository.getOneSeat({ _id: data.id });
     if (!seat) {
       throw new AppError({
         message: "Couldn't find the seat",
@@ -87,7 +87,7 @@ const updateSeat = async (data) => {
       });
     } else {
       const updatedSeat = await SeatRepository.updateSeat(
-        { name: seat.name },
+        { _id: data.id },
         data
       );
       return updatedSeat.toObject();
