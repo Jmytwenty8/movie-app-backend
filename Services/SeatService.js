@@ -49,6 +49,14 @@ const getAllSeats = async () => {
   }
 };
 
+const getAllVacantSeats = async (filledSeatIds) => {
+  const AllSeatIdList = await SeatRepository.getAllSeats();
+  const vacantList = AllSeatIdList.filter((list) => {
+    return !filledSeatIds.includes(list._id);
+  });
+  return vacantList;
+};
+
 const createSeat = async (data) => {
   try {
     const seat = await SeatRepository.createSeat(data);
@@ -121,4 +129,5 @@ export const SeatService = {
   patchSeat,
   updateSeat,
   getSeatIdByRowAndColumn,
+  getAllVacantSeats,
 };
