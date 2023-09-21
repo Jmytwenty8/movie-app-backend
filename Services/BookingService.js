@@ -57,9 +57,9 @@ const bookedSeats = async (theaterId, showtime, movieId) => {
   const allBookingData = await BookingRepository.getAllBookings();
   const filteredBookings = allBookingData.filter((filter) => {
     return (
-      filter.movieId == movieId &&
-      filter.theaterId == theaterId &&
-      filter.showtime == showtime
+      filter.movieId === movieId &&
+      filter.theaterId === theaterId &&
+      filter.showtime === showtime
     );
   });
   filteredBookings.map((seat) => {
