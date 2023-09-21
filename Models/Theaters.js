@@ -9,7 +9,7 @@ const schemaObject = {
     type: String,
     required: [true, "Enter Location"],
   },
-  seats: {
+  totalSeats: {
     type: Number,
     default: 100,
   },

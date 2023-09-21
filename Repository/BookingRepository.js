@@ -10,6 +10,10 @@ const getAllBookings = async () => {
   return bookingList;
 };
 
+const getAllBookingsByUser = async (data) => {
+  const bookingList = await bookings.find({ userId: data.userId });
+  return bookingList;
+};
 const createBooking = async (data) => {
   const booking = await bookings.create(data);
   return booking;
@@ -25,4 +29,5 @@ export const BookingRepository = {
   getAllBookings,
   createBooking,
   removeBooking,
+  getAllBookingsByUser,
 };

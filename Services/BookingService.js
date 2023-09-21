@@ -4,7 +4,6 @@ import { BookingRepository } from "../Repository/BookingRepository.js";
 import { TheaterRepository } from "../Repository/TheaterRepository.js";
 import { SeatService } from "../Repository/SeatService.js";
 import { UserRepository } from "../Repository/UserRepository.js";
-import { ShowRepository } from "../Repository/ShowRepository.js";
 import { TheaterRepository } from "../Repository/TheaterRepository.js";
 
 const getOneBooking = async (data) => {
@@ -38,13 +37,34 @@ const getAllBookings = async () => {
   }
 };
 
+const getAllBookingsByUser = async (data) => {
+  try {
+    const bookingList = await BookingRepository.getAllBookingsByUser(data);
+    if (!bookingList) {
+      throw new AppError({
+        message: "Couldn't get any bookings by the user",
+        statusCode: StatusCodes.NO_CONTENT,
+      });
+    }
+    return bookingList;
+  } catch (err) {
+    throw err;
+  }
+};
+
 const bookedSeats = async (theaterId, showtime, movieId) => {
   let seats = [];
   const allBookingData = await BookingRepository.getAllBookings();
   const filteredBookings = allBookingData.filter((filter) => {
-    return filter.includes(movieId).includes(theaterId).includes(showtime);
+    return (
+      filter.movieId == movieId &&
+      filter.theaterId == theaterId &&
+      filter.showtime == showtime
+    );
   });
-  filteredBookings.map(seats.push((booking) => booking.seats));
+  filteredBookings.map((seat) => {
+    seats.push(seat);
+  });
   seats = seats.flat();
   return seats;
 };
@@ -95,4 +115,5 @@ export const BookingService = {
   createBooking,
   removeBooking,
   bookedSeats,
+  getAllBookingsByUser,
 };
