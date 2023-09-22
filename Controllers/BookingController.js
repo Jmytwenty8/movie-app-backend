@@ -81,8 +81,42 @@ const createBooking = async (req, res) => {
   }
 };
 
+const getOneBooking = async (req, res) => {
+  try {
+    const response = await BookingService.getOneBooking({ id: req.body.id });
+    return response;
+  } catch (err) {
+    if (err instanceof AppError) {
+      FailureResponse.message = err.message;
+      res.status(err.statusCode).json(FailureResponse);
+    } else {
+      FailureResponse.message = "Booking not found due to internal error";
+      FailureResponse.error = err;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
+    }
+  }
+};
+
+const getAllBookings = async (req, res) => {
+  try {
+    const response = await BookingService.getAllBookings();
+    return response;
+  } catch (err) {
+    if (err instanceof AppError) {
+      FailureResponse.message = err.message;
+      res.status(err.statusCode).json(FailureResponse);
+    } else {
+      FailureResponse.message = "Bookings not found due to internal error";
+      FailureResponse.error = err;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
+    }
+  }
+};
+
 export const BookingController = {
   getVacantSeats,
   cancelBooking,
   createBooking,
+  getOneBooking,
+  getAllBookings,
 };
