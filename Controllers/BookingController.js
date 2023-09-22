@@ -90,7 +90,11 @@ const getAllBookingsByUser = async (req, res) => {
     const bookingList = await BookingService.getAllBookingsByUser({
       email: tokenizedEmail,
     });
-    return bookingList;
+
+    SuccessResponse.message =
+      "All Bookings By the LoggedIn User successfully retrieved";
+    SuccessResponse.data = bookingList;
+    res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (err) {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
@@ -107,7 +111,9 @@ const getAllBookingsByUser = async (req, res) => {
 const getOneBooking = async (req, res) => {
   try {
     const response = await BookingService.getOneBooking({ id: req.body.id });
-    return response;
+    SuccessResponse.message = "Booking successfully retrieved";
+    SuccessResponse.data = response;
+    res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (err) {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
@@ -122,8 +128,11 @@ const getOneBooking = async (req, res) => {
 
 const getAllBookings = async (req, res) => {
   try {
+    console.log("Getting all bookings");
     const response = await BookingService.getAllBookings();
-    return response;
+    SuccessResponse.message = "All Bookings successfully retrieved";
+    SuccessResponse.data = response;
+    res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (err) {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;

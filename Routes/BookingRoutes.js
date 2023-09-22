@@ -7,14 +7,10 @@ import {
 
 const bookingRouter = express.Router();
 
-bookingRouter.get(
-  "/booked",
-  tokenVerification,
-  BookingController.getAllBookingsByUser
-);
+bookingRouter.get("/booked", BookingController.getAllBookingsByUser);
 
 bookingRouter.get(
-  "/allBookings",
+  "/allbookings",
   tokenVerification,
   authorizeUserForMovieActions("admin"),
   BookingController.getAllBookings
@@ -28,18 +24,18 @@ bookingRouter.post(
 );
 
 bookingRouter.post(
-  "/createBooking",
+  "/createbooking",
   tokenVerification,
   BookingController.createBooking
 );
 bookingRouter.post(
-  "/vacantSeats",
+  "/vacantseats",
   tokenVerification,
   BookingController.getVacantSeats
 );
 
 bookingRouter.post(
-  "/bookingInquiry",
+  "/bookinginquiry",
   tokenVerification,
   authorizeUserForMovieActions("admin"),
   BookingController.getOneBooking
