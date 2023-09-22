@@ -1,6 +1,9 @@
 import SuccessResponse from "../Utils/SuccessResponse.js";
 import FailureResponse from "../Utils/FailureResponse.js";
 import { BookingService } from "../Services/BookingService.js";
+import { BookingService } from "../Services/BookingService.js";
+import Jwt from "jsonwebtoken";
+import { serverConfigs } from "../Configs/server-config.js";
 
 const getVacantSeats = async (req, res) => {
   try {

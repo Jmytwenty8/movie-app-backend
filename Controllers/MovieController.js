@@ -3,9 +3,6 @@ import FailureResponse from "../Utils/FailureResponse.js";
 import { MovieService } from "../Services/MovieService.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
-import { BookingService } from "../Services/BookingService.js";
-import Jwt from "jsonwebtoken";
-import { serverConfigs } from "../Configs/server-config.js";
 
 const createMovie = async (req, res) => {
   try {
