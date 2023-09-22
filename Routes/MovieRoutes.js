@@ -4,7 +4,6 @@ import {
   tokenVerification,
   authorizeUserForMovieActions,
 } from "../Middlewares/AuthMiddleware.js";
-import { movies } from "../Models/Movies.js";
 
 const movieRouter = express.Router();
 
@@ -16,6 +15,7 @@ movieRouter.post(
 );
 movieRouter.get("/", MovieController.getAllMovies);
 movieRouter.get("/:id", MovieController.getOneMovie);
+
 movieRouter.delete(
   "/remove/:id",
   tokenVerification,

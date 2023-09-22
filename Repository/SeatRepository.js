@@ -11,8 +11,8 @@ const getAllSeats = async () => {
 };
 
 const getSeatIdByRowAndColumn = async (row, column) => {
-  const seat = seats.find({ row: row, column: column });
-  return seat._id;
+  const seat = await seats.findOne({ row: row, column: column });
+  return seat._id.toString();
 };
 const createSeat = async (data) => {
   const seat = await seats.create(data);

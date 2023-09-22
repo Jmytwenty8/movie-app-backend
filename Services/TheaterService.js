@@ -6,10 +6,7 @@ const getOneTheater = async (data) => {
   try {
     const theater = await TheaterRepository.getOneTheater(data);
     if (!theater) {
-      throw new AppError({
-        message: "Couldn't find the Theater",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the Theater", StatusCodes.BAD_REQUEST);
     } else {
       return theater.toObject();
     }
@@ -22,10 +19,7 @@ const getAllTheaters = async () => {
   try {
     const theaterList = await TheaterRepository.getAllTheaters();
     if (!theaterList) {
-      throw new AppError({
-        message: "No Theaters Found",
-        statusCode: StatusCodes.NOT_FOUND,
-      });
+      throw new AppError("No Theaters Found", StatusCodes.NOT_FOUND);
     }
     return theaterList;
   } catch (err) {
@@ -37,10 +31,7 @@ const createTheater = async (data) => {
   try {
     const theater = await TheaterRepository.createTheater(data);
     if (!theater) {
-      throw new AppError({
-        message: "Theater is not created",
-        statusCode: StatusCodes.NOT_IMPLEMENTED,
-      });
+      throw new AppError("Theater is not created", StatusCodes.NOT_IMPLEMENTED);
     }
     return theater;
   } catch (err) {
@@ -61,10 +52,7 @@ export const patchTheater = async (data) => {
   try {
     const theater = await TheaterRepository.getOneTheater({ _id: data.id });
     if (!theater) {
-      throw new AppError({
-        message: "Couldn't find the Theater",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the Theater", StatusCodes.BAD_REQUEST);
     } else {
       const patchedTheater = await TheaterRepository.patchTheater(
         { _id: data.id },
@@ -81,10 +69,7 @@ const updateTheater = async (data) => {
   try {
     const theater = await TheaterRepository.getOneTheater({ _id: data.id });
     if (!theater) {
-      throw new AppError({
-        message: "Couldn't find the Theater",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the Theater", StatusCodes.BAD_REQUEST);
     } else {
       const updatedTheater = await TheaterRepository.updateTheater(
         { _id: data.id },

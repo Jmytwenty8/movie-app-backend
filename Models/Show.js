@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const schemaObject = {
-  theater: {
+  theaterId: {
     type: mongoose.Schema.Types.ObjectId,
   },
-  movie: {
+  movieId: {
     type: mongoose.Schema.Types.ObjectId,
   },
   showtime: {

@@ -3,6 +3,9 @@ import FailureResponse from "../Utils/FailureResponse.js";
 import { MovieService } from "../Services/MovieService.js";
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
+import { BookingService } from "../Services/BookingService.js";
+import Jwt from "jsonwebtoken";
+import { serverConfigs } from "../Configs/server-config.js";
 
 const createMovie = async (req, res) => {
   try {
@@ -53,7 +56,6 @@ const getOneMovie = async (req, res) => {
 const getAllMovies = async (req, res) => {
   try {
     const response = await MovieService.getAllMovies();
-    console.log(response);
     SuccessResponse.message = "Movies Found";
     SuccessResponse.data = response;
     res.status(StatusCodes.OK).json(SuccessResponse);

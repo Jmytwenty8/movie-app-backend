@@ -8,15 +8,9 @@ const signIn = async (data) => {
   try {
     const user = await UserRepository.getUserByEmail(data);
     if (!user) {
-      throw new AppError({
-        message: "Couldn't find the user",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
     } else if (!comparePassword(user.password, data.password)) {
-      throw new AppError({
-        message: "Password Incorrect",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Password Incorrect", StatusCodes.BAD_REQUEST);
     } else {
       return user.toObject();
     }
@@ -47,10 +41,7 @@ export const patchUser = async (data) => {
   try {
     const user = await UserRepository.getUserByEmail({ email: data.email });
     if (!user) {
-      throw new AppError({
-        message: "Couldn't find the user",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
     } else {
       if (data.password) {
         console.log("Initial" + data.password);
@@ -71,10 +62,7 @@ const updateUser = async (data) => {
   try {
     const user = await UserRepository.getUserByEmail({ email: data.email });
     if (!user) {
-      throw new AppError({
-        message: "Couldn't find the user",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
     } else {
       if (data.password) {
         console.log("Initial" + data.password);

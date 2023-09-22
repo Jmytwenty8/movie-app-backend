@@ -6,10 +6,7 @@ const getOneShow = async (data) => {
   try {
     const show = await ShowRepository.getOneShow(data);
     if (!show) {
-      throw new AppError({
-        message: "Couldn't find the show",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the show", StatusCodes.BAD_REQUEST);
     } else {
       return show.toObject();
     }
@@ -22,10 +19,7 @@ const getAllShows = async () => {
   try {
     const showList = await ShowRepository.getAllShows();
     if (!showList) {
-      throw new AppError({
-        message: "No shows Found",
-        statusCode: StatusCodes.NOT_FOUND,
-      });
+      throw new AppError("No shows Found", StatusCodes.NOT_FOUND);
     }
     return showList;
   } catch (err) {
@@ -37,10 +31,7 @@ const createShow = async (data) => {
   try {
     const show = await ShowRepository.createShow(data);
     if (!show) {
-      throw new AppError({
-        message: "Show is not created",
-        statusCode: StatusCodes.NOT_IMPLEMENTED,
-      });
+      throw new AppError("Show is not created", StatusCodes.NOT_IMPLEMENTED);
     }
     return show;
   } catch (err) {
@@ -61,10 +52,7 @@ export const patchShow = async (data) => {
   try {
     const show = await ShowRepository.getOneShow({ _id: data.id });
     if (!show) {
-      throw new AppError({
-        message: "Couldn't find the show",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the show", StatusCodes.BAD_REQUEST);
     } else {
       const patchedShow = await ShowRepository.patchShow(
         { _id: data.id },
@@ -81,10 +69,7 @@ const updateShow = async (data) => {
   try {
     const show = await ShowRepository.getOneShow({ _id: data.id });
     if (!show) {
-      throw new AppError({
-        message: "Couldn't find the show",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the show", StatusCodes.BAD_REQUEST);
     } else {
       const updatedShow = await ShowRepository.updateShow(
         { _id: data.id },

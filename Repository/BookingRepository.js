@@ -20,7 +20,7 @@ const createBooking = async (data) => {
 };
 
 const removeBooking = async (data) => {
-  const removedBooking = await bookings.deleteOne(data);
+  const removedBooking = await bookings.deleteOne({ _id: data.id });
   return removedBooking;
 };
 

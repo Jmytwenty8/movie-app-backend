@@ -6,10 +6,7 @@ const getOneSeat = async (data) => {
   try {
     const seat = await SeatRepository.getOneSeat(data);
     if (!seat) {
-      throw new AppError({
-        message: "Couldn't find the Seat",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
+      throw new AppError("Couldn't find the Seat", StatusCodes.BAD_REQUEST);
     } else {
       return seat.toObject();
     }
@@ -20,15 +17,8 @@ const getOneSeat = async (data) => {
 
 const getSeatIdByRowAndColumn = async (row, column) => {
   try {
-    const seatId = await this.getSeatIdByRowAndColumn(row, column);
-    if (!seatId) {
-      throw new AppError({
-        message: "Couldn't find the Seat",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
-    } else {
-      return seat.toObject();
-    }
+    const seatId = await SeatRepository.getSeatIdByRowAndColumn(row, column);
+    return seatId;
   } catch (err) {
     throw err;
   }
@@ -38,10 +28,7 @@ const getAllSeats = async () => {
   try {
     const seatList = await SeatRepository.getAllSeats();
     if (!seatList) {
-      throw new AppError({
-        message: "No seats Found",
-        statusCode: StatusCodes.NOT_FOUND,
-      });
+      throw new AppError("No seats Found", StatusCodes.NOT_FOUND);
     }
     return seatList;
   } catch (err) {
@@ -50,21 +37,25 @@ const getAllSeats = async () => {
 };
 
 const getAllVacantSeats = async (filledSeatIds) => {
-  const AllSeatIdList = await SeatRepository.getAllSeats();
-  const vacantList = AllSeatIdList.filter((list) => {
-    return !filledSeatIds.includes(list._id);
-  });
-  return vacantList;
+  try {
+    const AllSeatIdList = await SeatRepository.getAllSeats();
+    const vacantList = AllSeatIdList.filter((list) => {
+      return !filledSeatIds.includes(list._id.toString());
+    });
+    if (!vacantList) {
+      throw new AppError("All Seats Filled", StatusCodes.BAD_REQUEST);
+    }
+    return vacantList;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const createSeat = async (data) => {
   try {
     const seat = await SeatRepository.createSeat(data);
     if (!seat) {
-      throw new AppError({
-        message: "Seat is not created",
-        statusCode: StatusCodes.NOT_IMPLEMENTED,
-      });
+      throw new AppError("Seat is not created", StatusCodes.BAD_REQUEST);
     }
     return seat;
   } catch (err) {
