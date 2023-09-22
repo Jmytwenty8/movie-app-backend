@@ -32,7 +32,10 @@ const getAllBookings = async () => {
 
 const getAllBookingsByUser = async (data) => {
   try {
-    const bookingList = await BookingRepository.getAllBookingsByUser(data);
+    const user = await UserRepository.getUserByEmail({ email: data.email });
+    const bookingList = await BookingRepository.getAllBookingsByUser({
+      id: user._id,
+    });
     if (!bookingList) {
       throw new AppError(
         "Couldn't get any bookings by the user",
@@ -46,7 +49,6 @@ const getAllBookingsByUser = async (data) => {
 };
 
 const bookedSeats = async (theaterId, showtime, movieId) => {
-  // console.log(theaterId);
   try {
     let seats = [];
     const allBookingData = await BookingRepository.getAllBookings();
@@ -60,7 +62,6 @@ const bookedSeats = async (theaterId, showtime, movieId) => {
         seat.showtime.toString() == showtime
       );
     });
-    // console.log(filteredBookings);
     filteredBookings.map((seat) => {
       seats.push(
         seat.seats.map((s) => {

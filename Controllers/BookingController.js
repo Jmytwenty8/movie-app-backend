@@ -81,6 +81,29 @@ const createBooking = async (req, res) => {
   }
 };
 
+const getAllBookingsByUser = async (req, res) => {
+  try {
+    const tokenizedEmail = Jwt.verify(
+      req.cookies.auth,
+      serverConfigs.SECRET_KEY
+    );
+    const bookingList = await BookingService.getAllBookingsByUser({
+      email: tokenizedEmail,
+    });
+    return bookingList;
+  } catch (err) {
+    if (err instanceof AppError) {
+      FailureResponse.message = err.message;
+      res.status(err.statusCode).json(FailureResponse);
+    } else {
+      FailureResponse.message =
+        "Bookings by the user not completed due to internal error";
+      FailureResponse.error = err;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
+    }
+  }
+};
+
 const getOneBooking = async (req, res) => {
   try {
     const response = await BookingService.getOneBooking({ id: req.body.id });
@@ -119,4 +142,5 @@ export const BookingController = {
   createBooking,
   getOneBooking,
   getAllBookings,
+  getAllBookingsByUser,
 };
