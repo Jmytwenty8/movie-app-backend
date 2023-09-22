@@ -46,19 +46,21 @@ const getAllBookingsByUser = async (data) => {
 };
 
 const bookedSeats = async (theaterId, showtime, movieId) => {
+  // console.log(theaterId);
   try {
     let seats = [];
     const allBookingData = await BookingRepository.getAllBookings();
     if (!allBookingData) {
       throw new AppError("No bookings", StatusCodes.BAD_REQUEST);
     }
-    const filteredBookings = allBookingData.filter((filter) => {
+    const filteredBookings = allBookingData.filter((seat) => {
       return (
-        filter.movieId == movieId &&
-        filter.theaterId == theaterId &&
-        filter.showtime == showtime
+        seat.movieId.toString() == movieId &&
+        seat.theaterId.toString() == theaterId &&
+        seat.showtime.toString() == showtime
       );
     });
+    // console.log(filteredBookings);
     filteredBookings.map((seat) => {
       seats.push(
         seat.seats.map((s) => {
@@ -73,14 +75,13 @@ const bookedSeats = async (theaterId, showtime, movieId) => {
   }
 };
 
-const getAllVacantSeats = async (theaterId, movieId, showtime) => {
+const getAllVacantSeats = async (theaterId, showtime, movieId) => {
   try {
     const filledSeatIds = await BookingService.bookedSeats(
       theaterId,
       showtime,
       movieId
     );
-
     const vacantSeats = await SeatService.getAllVacantSeats(filledSeatIds);
     if (!vacantSeats) {
       throw new AppError(

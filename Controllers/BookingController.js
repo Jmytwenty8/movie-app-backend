@@ -1,17 +1,18 @@
 import SuccessResponse from "../Utils/SuccessResponse.js";
 import FailureResponse from "../Utils/FailureResponse.js";
-import { BookingService } from "../Services/BookingService.js";
+import { AppError } from "../Utils/AppError.js";
+import { StatusCodes } from "http-status-codes";
 import { BookingService } from "../Services/BookingService.js";
 import Jwt from "jsonwebtoken";
 import { serverConfigs } from "../Configs/server-config.js";
 
 const getVacantSeats = async (req, res) => {
   try {
-    const vacantSeatList = await BookingService.getAllVacantSeats({
-      movieId: req.body.movieId,
-      theaterId: req.body.theaterId,
-      showtime: req.body.showtime,
-    });
+    const vacantSeatList = await BookingService.getAllVacantSeats(
+      req.body.theaterId,
+      req.body.showtime,
+      req.body.movieId
+    );
     SuccessResponse.message = "Vacant Seats Found";
     SuccessResponse.data = vacantSeatList;
     res.status(StatusCodes.OK).json(SuccessResponse);
