@@ -14,6 +14,7 @@ const getSeatIdByRowAndColumn = async (row, column) => {
   const seat = await seats.findOne({ row: row, column: column });
   return seat._id.toString();
 };
+
 const createSeat = async (data) => {
   const seat = await seats.create(data);
   return seat;
@@ -25,12 +26,6 @@ const removeSeat = async (data) => {
 };
 
 const updateSeat = async (seat, data) => {
-  await seats.deleteOne(seat);
-  const newSeat = await seats.create(data);
-  return newSeat;
-};
-
-const patchSeat = async (seat, data) => {
   const newSeat = await seats.findOneAndUpdate(seat, data);
   return newSeat;
 };
@@ -41,6 +36,5 @@ export const SeatRepository = {
   createSeat,
   removeSeat,
   updateSeat,
-  patchSeat,
   getSeatIdByRowAndColumn,
 };

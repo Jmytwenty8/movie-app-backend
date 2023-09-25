@@ -72,29 +72,9 @@ const removeSeat = async (data) => {
   }
 };
 
-export const patchSeat = async (data) => {
-  try {
-    const seat = await SeatRepository.getOneSeat({ _id: data.id });
-    if (!seat) {
-      throw new AppError({
-        message: "Couldn't find the seat",
-        statusCode: StatusCodes.BAD_REQUEST,
-      });
-    } else {
-      const patchedSeat = await SeatRepository.patchSeat(
-        { _id: data.id },
-        data
-      );
-      return patchedSeat.toObject();
-    }
-  } catch (err) {
-    throw err;
-  }
-};
-
 const updateSeat = async (data) => {
   try {
-    const seat = await SeatRepository.getOneSeat({ _id: data.id });
+    const seat = await SeatRepository.getOneSeat({ id: data.id });
     if (!seat) {
       throw new AppError({
         message: "Couldn't find the seat",
@@ -117,7 +97,6 @@ export const SeatService = {
   getAllSeats,
   createSeat,
   removeSeat,
-  patchSeat,
   updateSeat,
   getSeatIdByRowAndColumn,
   getAllVacantSeats,

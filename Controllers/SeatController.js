@@ -108,33 +108,10 @@ const updateSeat = async (req, res) => {
   }
 };
 
-const patchSeat = async (req, res) => {
-  try {
-    const response = await SeatService.patchSeat({
-      id: req.body.id,
-      row: req.body.row,
-      column: req.body.column,
-    });
-    SuccessResponse.message = "Seat Patch Updated";
-    SuccessResponse.data = response;
-    res.status(StatusCodes.OK).json(SuccessResponse);
-  } catch (err) {
-    if (err instanceof AppError) {
-      FailureResponse.message = err.message;
-      res.status(err.statusCode).json(FailureResponse);
-    } else {
-      FailureResponse.message = "Seat not patch updated due to internal error";
-      FailureResponse.error = err;
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
-    }
-  }
-};
-
 export const SeatController = {
   createSeat,
   getOneSeat,
   getAllSeats,
   updateSeat,
-  patchSeat,
   removeSeat,
 };

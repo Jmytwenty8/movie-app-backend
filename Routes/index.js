@@ -4,6 +4,7 @@ import express from "express";
 import { bookingRoutes } from "./BookingRoutes.js";
 import { showRoutes } from "./ShowRoutes.js";
 import { theaterRoutes } from "./TheaterRoutes.js";
+import { seatRoutes } from "./SeatRoutes.js";
 
 const rootRouter = express.Router();
 rootRouter.use("/user", userRoutes.userRouter);
@@ -11,6 +12,7 @@ rootRouter.use("/movie", movieRoutes.movieRouter);
 rootRouter.use("/booking", bookingRoutes.bookingRouter);
 rootRouter.use("/show", showRoutes.showRouter);
 rootRouter.use("/theater", theaterRoutes.theaterRouter);
+rootRouter.use("/seat", seatRoutes.seatRouter);
 
 export const router = {
   rootRouter,
