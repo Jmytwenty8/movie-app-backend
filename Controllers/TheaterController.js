@@ -7,10 +7,10 @@ import { AppError } from "../Utils/AppError.js";
 const createTheater = async (req, res) => {
   try {
     const response = await TheaterService.createTheater({
-      id: req.body.id,
       name: req.body.name,
       location: req.body.location,
-      movies: req.body.movies,
+      totalSeats: req.body.totalSeats,
+      price: req.body.price,
     });
     SuccessResponse.message = "Theater Created";
     SuccessResponse.data = response;
@@ -95,7 +95,8 @@ const updateTheater = async (req, res) => {
       id: req.body.id,
       name: req.body.name,
       location: req.body.location,
-      movies: req.body.movies,
+      totalSeats: req.body.totalSeats,
+      price: req.body.price,
     });
     SuccessResponse.message = "Theater Updated";
     SuccessResponse.data = response;
@@ -112,35 +113,10 @@ const updateTheater = async (req, res) => {
   }
 };
 
-const patchTheater = async (req, res) => {
-  try {
-    const response = await TheaterService.patchTheater({
-      id: req.body.id,
-      name: req.body.name,
-      location: req.body.location,
-      movies: req.body.movies,
-    });
-    SuccessResponse.message = "Theater Patch Updated";
-    SuccessResponse.data = response;
-    res.status(StatusCodes.OK).json(SuccessResponse);
-  } catch (err) {
-    if (err instanceof AppError) {
-      FailureResponse.message = err.message;
-      res.status(err.statusCode).json(FailureResponse);
-    } else {
-      FailureResponse.message =
-        "Theater not patch updated due to internal error";
-      FailureResponse.error = err;
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
-    }
-  }
-};
-
 export const TheaterController = {
   createTheater,
   getOneTheater,
   getAllTheaters,
   updateTheater,
-  patchTheater,
   removeTheater,
 };

@@ -48,26 +48,9 @@ const removeTheater = async (data) => {
   }
 };
 
-export const patchTheater = async (data) => {
-  try {
-    const theater = await TheaterRepository.getOneTheater({ _id: data.id });
-    if (!theater) {
-      throw new AppError("Couldn't find the Theater", StatusCodes.BAD_REQUEST);
-    } else {
-      const patchedTheater = await TheaterRepository.patchTheater(
-        { _id: data.id },
-        data
-      );
-      return patchedTheater.toObject();
-    }
-  } catch (err) {
-    throw err;
-  }
-};
-
 const updateTheater = async (data) => {
   try {
-    const theater = await TheaterRepository.getOneTheater({ _id: data.id });
+    const theater = await TheaterRepository.getOneTheater({ id: data.id });
     if (!theater) {
       throw new AppError("Couldn't find the Theater", StatusCodes.BAD_REQUEST);
     } else {
@@ -87,6 +70,5 @@ export const TheaterService = {
   getAllTheaters,
   createTheater,
   removeTheater,
-  patchTheater,
   updateTheater,
 };

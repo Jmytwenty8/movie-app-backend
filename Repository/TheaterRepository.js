@@ -21,12 +21,6 @@ const removeTheater = async (data) => {
 };
 
 const updateTheater = async (theater, data) => {
-  await theaters.deleteOne(theater);
-  const newTheater = await theaters.create(data);
-  return newTheater;
-};
-
-const patchTheater = async (theater, data) => {
   const newTheater = await theaters.findOneAndUpdate(theater, data);
   return newTheater;
 };
@@ -37,5 +31,4 @@ export const TheaterRepository = {
   createTheater,
   removeTheater,
   updateTheater,
-  patchTheater,
 };
