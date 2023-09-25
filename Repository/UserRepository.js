@@ -6,7 +6,7 @@ const getUserByEmail = async (data) => {
 };
 
 const getUserById = async (data) => {
-  const user = await users.findOne({ id: data.id });
+  const user = await users.findById(data.id);
   return user;
 };
 

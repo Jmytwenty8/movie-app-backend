@@ -8,12 +8,13 @@ import { serverConfigs } from "../Configs/server-config.js";
 
 const getVacantSeats = async (req, res) => {
   try {
-    const vacantSeatList = await BookingService.getAllVacantSeats(
-      req.body.theaterId,
-      req.body.showtime,
-      req.body.movieId
-    );
+    const vacantSeatList = await BookingService.getAllVacantSeats({
+      theaterId: req.body.theaterId,
+      showtime: req.body.showtime,
+      movieId: req.body.movieId,
+    });
     SuccessResponse.message = "Vacant Seats Found";
+    SuccessResponse.availableSeats = vacantSeatList.length;
     SuccessResponse.data = vacantSeatList;
     res.status(StatusCodes.OK).json(SuccessResponse);
   } catch (err) {
@@ -66,6 +67,7 @@ const createBooking = async (req, res) => {
       seats: req.body.seats,
       email: tokenizedEmail,
     });
+    console.log(tokenizedEmail);
     SuccessResponse.message = "Booking created successfully";
     SuccessResponse.data = createdBooking;
     res.status(StatusCodes.OK).json(SuccessResponse);

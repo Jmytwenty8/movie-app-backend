@@ -7,7 +7,11 @@ import {
 
 const bookingRouter = express.Router();
 
-bookingRouter.get("/booked", BookingController.getAllBookingsByUser);
+bookingRouter.get(
+  "/booked",
+  tokenVerification,
+  BookingController.getAllBookingsByUser
+);
 
 bookingRouter.get(
   "/allbookings",
@@ -19,12 +23,11 @@ bookingRouter.get(
 bookingRouter.post(
   "/cancel",
   tokenVerification,
-  authorizeUserForMovieActions("admin"),
   BookingController.cancelBooking
 );
 
 bookingRouter.post(
-  "/createbooking",
+  "/create",
   tokenVerification,
   BookingController.createBooking
 );

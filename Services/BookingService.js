@@ -33,8 +33,9 @@ const getAllBookings = async () => {
 const getAllBookingsByUser = async (data) => {
   try {
     const user = await UserRepository.getUserByEmail({ email: data.email });
+    console.log(user);
     const bookingList = await BookingRepository.getAllBookingsByUser({
-      id: user._id,
+      userId: user._id,
     });
     if (!bookingList) {
       throw new AppError(
@@ -48,7 +49,7 @@ const getAllBookingsByUser = async (data) => {
   }
 };
 
-const bookedSeats = async (theaterId, showtime, movieId) => {
+const bookedSeats = async (data) => {
   try {
     let seats = [];
     const allBookingData = await BookingRepository.getAllBookings();
@@ -57,9 +58,9 @@ const bookedSeats = async (theaterId, showtime, movieId) => {
     }
     const filteredBookings = allBookingData.filter((seat) => {
       return (
-        seat.movieId.toString() == movieId &&
-        seat.theaterId.toString() == theaterId &&
-        seat.showtime.toString() == showtime
+        seat.movieId.toString() == data.movieId &&
+        seat.theaterId.toString() == data.theaterId &&
+        seat.showtime.toString() == data.showtime
       );
     });
     filteredBookings.map((seat) => {
@@ -76,13 +77,13 @@ const bookedSeats = async (theaterId, showtime, movieId) => {
   }
 };
 
-const getAllVacantSeats = async (theaterId, showtime, movieId) => {
+const getAllVacantSeats = async (data) => {
   try {
-    const filledSeatIds = await BookingService.bookedSeats(
-      theaterId,
-      showtime,
-      movieId
-    );
+    const filledSeatIds = await BookingService.bookedSeats({
+      theaterId: data.theaterId,
+      showtime: data.showtime,
+      movieId: data.movieId,
+    });
     const vacantSeats = await SeatService.getAllVacantSeats(filledSeatIds);
     if (!vacantSeats) {
       throw new AppError(
@@ -105,11 +106,11 @@ const createBooking = async (data) => {
     });
 
     const seatIds = await Promise.all(seatIdPromise);
-    const vacantSeats = await BookingService.getAllVacantSeats(
-      data.theaterId,
-      data.movieId,
-      data.showtime
-    );
+    const vacantSeats = await BookingService.getAllVacantSeats({
+      theaterId: data.theaterId,
+      movieId: data.movieId,
+      showtime: data.showtime,
+    });
     const checkAllowedSeats = vacantSeats.filter((seat) => {
       return seatIds.includes(seat._id.toString());
     });
@@ -151,12 +152,14 @@ const createBooking = async (data) => {
 const removeBooking = async (data) => {
   try {
     const booking = await BookingRepository.getOneBooking(data);
+    console.log(booking);
     const theater = await TheaterRepository.getOneTheater({
       id: booking.theaterId,
     });
     const amountToBeRefunded = theater.price * booking.seats.length;
     const user = await UserRepository.getUserById({ id: booking.userId });
     const removedBooking = await BookingRepository.removeBooking(data);
+    console.log(removedBooking);
     await UserRepository.patchUser(user, {
       wallet: user.wallet + amountToBeRefunded,
     });
