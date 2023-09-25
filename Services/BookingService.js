@@ -155,7 +155,7 @@ const removeBooking = async (data) => {
       id: booking.theaterId,
     });
     const amountToBeRefunded = theater.price * booking.seats.length;
-    const user = await UserRepository.getUserByEmail({ email: data.email });
+    const user = await UserRepository.getUserById({ id: booking.userId });
     const removedBooking = await BookingRepository.removeBooking(data);
     await UserRepository.patchUser(user, {
       wallet: user.wallet + amountToBeRefunded,

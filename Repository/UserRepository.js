@@ -5,6 +5,11 @@ const getUserByEmail = async (data) => {
   return user;
 };
 
+const getUserById = async (data) => {
+  const user = await users.findOne({ id: data.id });
+  return user;
+};
+
 const createUser = async (data) => {
   const user = await users.create(data);
   return user;
@@ -31,6 +36,7 @@ const patchUser = async (user, data) => {
 
 export const UserRepository = {
   getUserByEmail,
+  getUserById,
   createUser,
   removeUser,
   updateUser,
