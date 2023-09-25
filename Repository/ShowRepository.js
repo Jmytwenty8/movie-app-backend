@@ -21,12 +21,6 @@ const removeShow = async (data) => {
 };
 
 const updateShow = async (show, data) => {
-  await shows.deleteOne(show);
-  const newShow = await shows.create(data);
-  return newShow;
-};
-
-const patchShow = async (show, data) => {
   const newShow = await shows.findOneAndUpdate(show, data);
   return newShow;
 };
@@ -37,5 +31,4 @@ export const ShowRepository = {
   createShow,
   removeShow,
   updateShow,
-  patchShow,
 };

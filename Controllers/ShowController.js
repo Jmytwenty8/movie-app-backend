@@ -7,8 +7,8 @@ import { AppError } from "../Utils/AppError.js";
 const createShow = async (req, res) => {
   try {
     const response = await ShowService.createShow({
-      theater: req.body.theater,
-      movie: req.body.movie,
+      theaterId: req.body.theaterId,
+      movieId: req.body.movieId,
       showtime: req.body.showtime,
     });
     SuccessResponse.message = "Show Created";
@@ -110,34 +110,10 @@ const updateShow = async (req, res) => {
   }
 };
 
-const patchShow = async (req, res) => {
-  try {
-    const response = await ShowService.patchShow({
-      id: req.body.id,
-      theater: req.body.theater,
-      movie: req.body.movie,
-      showtime: req.body.showtime,
-    });
-    SuccessResponse.message = "Show Patch Updated";
-    SuccessResponse.data = response;
-    res.status(StatusCodes.OK).json(SuccessResponse);
-  } catch (err) {
-    if (err instanceof AppError) {
-      FailureResponse.message = err.message;
-      res.status(err.statusCode).json(FailureResponse);
-    } else {
-      FailureResponse.message = "Show not patch updated due to internal error";
-      FailureResponse.error = err;
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
-    }
-  }
-};
-
 export const ShowController = {
   createShow,
   getOneShow,
   getAllShows,
   updateShow,
-  patchShow,
   removeShow,
 };

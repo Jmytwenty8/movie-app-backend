@@ -67,7 +67,7 @@ export const patchShow = async (data) => {
 
 const updateShow = async (data) => {
   try {
-    const show = await ShowRepository.getOneShow({ _id: data.id });
+    const show = await ShowRepository.getOneShow({ id: data.id });
     if (!show) {
       throw new AppError("Couldn't find the show", StatusCodes.BAD_REQUEST);
     } else {
