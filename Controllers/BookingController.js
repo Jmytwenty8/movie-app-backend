@@ -67,7 +67,6 @@ const createBooking = async (req, res) => {
       seats: req.body.seats,
       email: tokenizedEmail,
     });
-    console.log(tokenizedEmail);
     SuccessResponse.message = "Booking created successfully";
     SuccessResponse.data = createdBooking;
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -130,7 +129,6 @@ const getOneBooking = async (req, res) => {
 
 const getAllBookings = async (req, res) => {
   try {
-    console.log("Getting all bookings");
     const response = await BookingService.getAllBookings();
     SuccessResponse.message = "All Bookings successfully retrieved";
     SuccessResponse.data = response;

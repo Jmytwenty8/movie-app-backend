@@ -33,7 +33,6 @@ const getAllBookings = async () => {
 const getAllBookingsByUser = async (data) => {
   try {
     const user = await UserRepository.getUserByEmail({ email: data.email });
-    console.log(user);
     const bookingList = await BookingRepository.getAllBookingsByUser({
       userId: user._id,
     });
@@ -152,14 +151,12 @@ const createBooking = async (data) => {
 const removeBooking = async (data) => {
   try {
     const booking = await BookingRepository.getOneBooking(data);
-    console.log(booking);
     const theater = await TheaterRepository.getOneTheater({
       id: booking.theaterId,
     });
     const amountToBeRefunded = theater.price * booking.seats.length;
     const user = await UserRepository.getUserById({ id: booking.userId });
     const removedBooking = await BookingRepository.removeBooking(data);
-    console.log(removedBooking);
     await UserRepository.patchUser(user, {
       wallet: user.wallet + amountToBeRefunded,
     });

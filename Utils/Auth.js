@@ -11,6 +11,6 @@ export const comparePassword = async (databasePassword, suppliedPassword) => {
 };
 
 export const createToken = async (email) => {
-  const token = await Jwt.sign(email, serverConfigs.SECRET_KEY);
+  const token = Jwt.sign(email, serverConfigs.SECRET_KEY);
   return token;
 };

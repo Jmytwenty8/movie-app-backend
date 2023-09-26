@@ -44,7 +44,6 @@ export const patchUser = async (data) => {
       throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
     } else {
       if (data.password) {
-        console.log("Initial" + data.password);
         data.password = await hashPassword(data.password);
       }
       const response = await UserRepository.patchUser(
@@ -65,7 +64,6 @@ const updateUser = async (data) => {
       throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
     } else {
       if (data.password) {
-        console.log("Initial" + data.password);
         data.password = await hashPassword(data.password);
       }
       const response = await UserRepository.updateUser(
