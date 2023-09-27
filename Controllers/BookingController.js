@@ -14,9 +14,10 @@ const getVacantSeats = async (req, res) => {
       movieId: req.body.movieId,
     });
     SuccessResponse.message = "Vacant Seats Found";
-    SuccessResponse.availableSeats = vacantSeatList.length;
     SuccessResponse.data = vacantSeatList;
+    SuccessResponse.availableSeats = vacantSeatList.length;
     res.status(StatusCodes.OK).json(SuccessResponse);
+    delete SuccessResponse.availableSeats;
   } catch (err) {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
