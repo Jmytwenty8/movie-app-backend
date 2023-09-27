@@ -12,7 +12,7 @@ const signUp = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
       wallet: req.body.wallet,
-      userType: req.body.userType,
+      role: req.body.role,
       number: req.body.number,
     });
     delete response.password;
@@ -85,7 +85,7 @@ const updateUser = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
       number: req.body.number,
-      userType: req.body.userType,
+      role: req.body.role,
       wallet: req.body.wallet,
     });
     delete response.password;
@@ -111,7 +111,7 @@ const patchUser = async (req, res) => {
       email: req.body.email,
       password: req.body.password,
       number: req.body.number,
-      userType: req.body.userType,
+      role: req.body.role,
       wallet: req.body.wallet,
     });
     delete response.password;
