@@ -39,7 +39,7 @@ const signIn = async (req, res) => {
     });
     delete response.password;
     const token = await createToken(response.email);
-    res.cookie("auth", token, { httpOnly: true });
+    res.cookie("auth", token);
     SuccessResponse.message = "User SignedIn";
     SuccessResponse.data = response;
     res.status(StatusCodes.OK).json(SuccessResponse);
