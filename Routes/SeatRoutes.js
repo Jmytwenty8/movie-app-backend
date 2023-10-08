@@ -7,19 +7,9 @@ import {
 
 const seatRouter = express.Router();
 
-seatRouter.get(
-  "/",
-  authorizeUserForMovieActions("admin"),
-  tokenVerification,
-  SeatController.getAllSeats
-);
+seatRouter.get("/", SeatController.getAllSeats);
 
-seatRouter.get(
-  "/inquiry",
-  authorizeUserForMovieActions("admin"),
-  tokenVerification,
-  SeatController.getOneSeat
-);
+seatRouter.post("/inquiry", SeatController.getOneSeat);
 
 seatRouter.delete(
   "/delete",

@@ -13,12 +13,7 @@ bookingRouter.get(
   BookingController.getAllBookingsByUser
 );
 
-bookingRouter.get(
-  "/allbookings",
-  tokenVerification,
-  authorizeUserForMovieActions("admin"),
-  BookingController.getAllBookings
-);
+bookingRouter.get("/allbookings", BookingController.getAllBookings);
 
 bookingRouter.post(
   "/cancel",
@@ -31,11 +26,7 @@ bookingRouter.post(
   tokenVerification,
   BookingController.createBooking
 );
-bookingRouter.post(
-  "/vacantseats",
-  tokenVerification,
-  BookingController.getVacantSeats
-);
+bookingRouter.post("/vacantseats", BookingController.getVacantSeats);
 
 bookingRouter.post(
   "/bookinginquiry",

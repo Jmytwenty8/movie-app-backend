@@ -14,12 +14,7 @@ theaterRouter.get(
   TheaterController.getAllTheaters
 );
 
-theaterRouter.get(
-  "/inquiry",
-  authorizeUserForMovieActions("admin"),
-  tokenVerification,
-  TheaterController.getOneTheater
-);
+theaterRouter.post("/inquiry", TheaterController.getOneTheater);
 
 theaterRouter.delete(
   "/delete",

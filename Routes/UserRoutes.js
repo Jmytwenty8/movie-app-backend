@@ -8,7 +8,7 @@ import {
 const userRouter = express.Router();
 
 userRouter.post("/create", UserController.signUp);
-userRouter.get("/login", UserController.signIn);
+userRouter.post("/login", UserController.signIn);
 userRouter.delete(
   "/remove",
   tokenVerification,
