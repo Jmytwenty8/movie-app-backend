@@ -3,14 +3,29 @@ import { comparePassword } from "../Utils/Auth.js";
 import { AppError } from "../Utils/AppError.js";
 import { UserRepository } from "../Repository/UserRepository.js";
 import { hashPassword } from "../Utils/HashPassword.js";
+import bcrypt from "bcrypt";
 
 const signIn = async (data) => {
   try {
     const user = await UserRepository.getUserByEmail(data);
     if (!user) {
       throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
-    } else if (!comparePassword(user.password, data.password)) {
+    }
+    if (!(await comparePassword(data.password, user.password))) {
+      console.log("bye bye");
       throw new AppError("Password Incorrect", StatusCodes.BAD_REQUEST);
+    }
+    return user.toObject();
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getUser = async (data) => {
+  try {
+    const user = await UserRepository.getUserByEmail(data);
+    if (!user) {
+      throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
     } else {
       return user.toObject();
     }
@@ -83,4 +98,5 @@ export const UserService = {
   removeUser,
   updateUser,
   patchUser,
+  getUser,
 };

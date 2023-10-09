@@ -15,12 +15,8 @@ userRouter.delete(
   authorizeUserForUserActions("admin"),
   UserController.removeUser
 );
-userRouter.patch(
-  "/patch",
-  tokenVerification,
-  authorizeUserForUserActions("admin"),
-  UserController.patchUser
-);
+userRouter.post("/patch", tokenVerification, UserController.patchUser);
+userRouter.post("/getUser", UserController.getUser);
 userRouter.put(
   "/update",
   tokenVerification,

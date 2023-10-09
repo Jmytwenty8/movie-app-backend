@@ -2,9 +2,13 @@ import bcrypt from "bcrypt";
 import Jwt from "jsonwebtoken";
 import { serverConfigs } from "../Configs/server-config.js";
 
-export const comparePassword = async (databasePassword, suppliedPassword) => {
+export const comparePassword = async (suppliedPassword, databasePassword) => {
   try {
-    return await bcrypt.compare(databasePassword, suppliedPassword);
+    const match = await bcrypt.compare(suppliedPassword, databasePassword);
+    if (match) {
+      return true;
+    }
+    return false;
   } catch (err) {
     console.error(err);
   }

@@ -102,6 +102,26 @@ const updateUser = async (req, res) => {
   }
 };
 
+const getUser = async (req, res) => {
+  try {
+    const response = await UserService.getUser({
+      email: req.body.email,
+    });
+    SuccessResponse.message = "User Found";
+    SuccessResponse.data = response;
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (err) {
+    if (err instanceof AppError) {
+      FailureResponse.message = err.message;
+      res.status(err.statusCode).json(FailureResponse);
+    } else {
+      FailureResponse.message = "User not patch updated due to internal error";
+      FailureResponse.error = err;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
+    }
+  }
+};
+
 const patchUser = async (req, res) => {
   try {
     const response = await UserService.patchUser({
@@ -134,4 +154,5 @@ export const UserController = {
   removeUser,
   updateUser,
   patchUser,
+  getUser,
 };
