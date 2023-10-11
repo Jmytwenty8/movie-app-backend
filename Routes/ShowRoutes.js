@@ -21,7 +21,7 @@ showRouter.get(
   ShowController.getOneShow
 );
 
-showRouter.delete(
+showRouter.post(
   "/delete",
   authorizeUserForMovieActions("admin"),
   tokenVerification,

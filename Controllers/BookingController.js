@@ -12,6 +12,7 @@ const getVacantSeats = async (req, res) => {
       theaterId: req.body.theaterId,
       showtime: req.body.showtime,
       movieId: req.body.movieId,
+      reservationDate: req.body.reservationDate,
     });
     SuccessResponse.message = "Vacant Seats Found";
     SuccessResponse.data = vacantSeatList;
@@ -66,6 +67,7 @@ const createBooking = async (req, res) => {
       theaterId: req.body.theaterId,
       showtime: req.body.showtime,
       seats: req.body.seats,
+      reservationDate: req.body.reservationDate,
       email: tokenizedEmail,
     });
     SuccessResponse.message = "Booking created successfully";

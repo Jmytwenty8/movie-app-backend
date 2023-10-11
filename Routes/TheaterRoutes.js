@@ -7,12 +7,7 @@ import {
 
 const theaterRouter = express.Router();
 
-theaterRouter.get(
-  "/",
-  authorizeUserForMovieActions("admin"),
-  tokenVerification,
-  TheaterController.getAllTheaters
-);
+theaterRouter.get("/", tokenVerification, TheaterController.getAllTheaters);
 
 theaterRouter.post("/inquiry", TheaterController.getOneTheater);
 

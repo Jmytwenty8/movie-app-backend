@@ -19,6 +19,9 @@ const schemaObject = {
   seats: {
     type: [mongoose.Schema.Types.ObjectId],
   },
+  reservationDate: {
+    type: Date,
+  },
 };
 
 const bookingSchema = new mongoose.Schema(schemaObject);

@@ -10,6 +10,8 @@ const createShow = async (req, res) => {
       theaterId: req.body.theaterId,
       movieId: req.body.movieId,
       showtime: req.body.showtime,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
     });
     SuccessResponse.message = "Show Created";
     SuccessResponse.data = response;
@@ -94,6 +96,8 @@ const updateShow = async (req, res) => {
       theater: req.body.theater,
       movie: req.body.movie,
       showtime: req.body.showtime,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
     });
     SuccessResponse.message = "Show Updated";
     SuccessResponse.data = response;
