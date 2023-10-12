@@ -11,10 +11,10 @@ theaterRouter.get("/", tokenVerification, TheaterController.getAllTheaters);
 
 theaterRouter.post("/inquiry", TheaterController.getOneTheater);
 
-theaterRouter.delete(
+theaterRouter.post(
   "/delete",
-  authorizeUserForMovieActions("admin"),
   tokenVerification,
+  authorizeUserForMovieActions("admin"),
   TheaterController.removeTheater
 );
 
