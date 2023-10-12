@@ -8,7 +8,7 @@ const createMovie = async (req, res) => {
   try {
     const response = await MovieService.createMovie({
       name: req.body.name,
-      imageUrl: req.body.image,
+      imageUrl: req.body.imageUrl,
       description: req.body.description,
       imdb: req.body.imdb,
       runtime: req.body.runtime,
