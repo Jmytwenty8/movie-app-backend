@@ -46,6 +46,31 @@ export const authorizeUserForUserActions = (role) => {
   };
 };
 
+export const authorizeUserForUserActionsForAdmin = (role) => {
+  return async (req, res, next) => {
+    try {
+      const tokenizedEmail = Jwt.verify(
+        req.cookies.auth,
+        serverConfigs.SECRET_KEY
+      );
+      const user = await UserRepository.getUserByEmail({
+        email: tokenizedEmail,
+      });
+      if (user.role !== role) {
+        FailureResponse.message = "User not authorized to complete the task";
+        FailureResponse.error.StatusCodes = StatusCodes.FORBIDDEN;
+        return res.status(StatusCodes.FORBIDDEN).json(FailureResponse);
+      } else {
+        next();
+      }
+    } catch (err) {
+      FailureResponse.message = "User not found";
+      FailureResponse.error.StatusCodes = StatusCodes.NOT_FOUND;
+      return res.status(StatusCodes.NOT_FOUND).json(FailureResponse);
+    }
+  };
+};
+
 export const authorizeUserForMovieActions = (role) => {
   return async (req, res, next) => {
     const tokenizedEmail = Jwt.verify(

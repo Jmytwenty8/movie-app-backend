@@ -23,6 +23,13 @@ const signUp = async (req, res) => {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
       res.status(err.statusCode).json(FailureResponse);
+    } else if (err.code === 11000) {
+      FailureResponse.message = "User already exists";
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
     } else {
       FailureResponse.message = "User not created due to some internal error";
       FailureResponse.error = err;
@@ -47,8 +54,34 @@ const signIn = async (req, res) => {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
       res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
     } else {
       FailureResponse.message = "User not signedIn due to internal error";
+      FailureResponse.error = err;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
+    }
+  }
+};
+
+const getAllUsers = async (req, res) => {
+  try {
+    const response = await UserService.getAllUsers();
+    SuccessResponse.message = "Users Found";
+    SuccessResponse.data = response;
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (err) {
+    if (err instanceof AppError) {
+      FailureResponse.message = err.message;
+      res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
+    } else {
+      FailureResponse.message = "User not Found due to internal error";
       FailureResponse.error = err;
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
     }
@@ -57,10 +90,8 @@ const signIn = async (req, res) => {
 const removeUser = async (req, res) => {
   try {
     const response = await UserService.removeUser({
-      email: req.body.email,
-      password: req.body.password,
+      id: req.body.id,
     });
-
     SuccessResponse.message = "User Removed";
     SuccessResponse.data = response;
     res.status(StatusCodes.OK).json(SuccessResponse);
@@ -68,6 +99,10 @@ const removeUser = async (req, res) => {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
       res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
     } else {
       FailureResponse.message = "User not removed due to internal error";
       FailureResponse.error = err;
@@ -94,6 +129,10 @@ const updateUser = async (req, res) => {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
       res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
     } else {
       FailureResponse.message = "User not updated due to internal error";
       FailureResponse.error = err;
@@ -114,8 +153,40 @@ const getUser = async (req, res) => {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
       res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
     } else {
       FailureResponse.message = "User not patch updated due to internal error";
+      FailureResponse.error = err;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
+    }
+  }
+};
+
+const getUserById = async (req, res) => {
+  try {
+    const user = {
+      id: req.params.id,
+    };
+    const response = await UserService.getUserById(user);
+    SuccessResponse.message = "User Found";
+    SuccessResponse.data = response;
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (err) {
+    if (err instanceof AppError) {
+      FailureResponse.message = err.message;
+      res.status(err.statusCode).json(FailureResponse);
+    } else if (err.code === 11000) {
+      FailureResponse.message = "User already exists";
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
+    } else {
+      FailureResponse.message = "User not created due to some internal error";
       FailureResponse.error = err;
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
     }
@@ -140,6 +211,10 @@ const patchUser = async (req, res) => {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
       res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
     } else {
       FailureResponse.message = "User not patch updated due to internal error";
       FailureResponse.error = err;
@@ -155,4 +230,6 @@ export const UserController = {
   updateUser,
   patchUser,
   getUser,
+  getAllUsers,
+  getUserById,
 };
