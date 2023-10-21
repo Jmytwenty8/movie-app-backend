@@ -3,11 +3,15 @@ import mongoose from "mongoose";
 const schemaObject = {
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, "Enter User ID for Booking"],
+    required: [true],
   },
   movieId: {
     type: mongoose.Schema.Types.ObjectId,
-    required: [true, "Enter Movie ID for Booking"],
+    required: [true],
+  },
+  bookingId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: [true],
   },
   rating: {
     type: Number,

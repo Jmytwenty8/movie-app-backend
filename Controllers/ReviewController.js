@@ -17,6 +17,7 @@ const createReview = async (req, res) => {
     const createdReview = await ReviewService.createReview({
       userId: user._id,
       movieId: req.body.movieId,
+      bookingId: req.body.bookingId,
       rating: req.body.rating,
       description: req.body.description,
       isPending: req.body.isPending,
@@ -104,6 +105,7 @@ const updateReview = async (req, res) => {
       id: req.body.id,
       userId: user._id,
       movieId: req.body.movieId,
+      bookingId: req.body.bookingId,
       rating: req.body.rating,
       description: req.body.description,
       isPending: req.body.isPending,
@@ -128,9 +130,34 @@ const updateReview = async (req, res) => {
   }
 };
 
+const removeReview = async (req, res) => {
+  try {
+    const response = await ReviewService.removeReview({
+      id: req.body.id,
+    });
+    SuccessResponse.message = "Review Deleted";
+    SuccessResponse.data = response;
+    res.status(StatusCodes.OK).json(SuccessResponse);
+  } catch (err) {
+    if (err instanceof AppError) {
+      FailureResponse.message = err.message;
+      res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
+    } else {
+      FailureResponse.message = "Review not deleted due to internal error";
+      FailureResponse.error = err;
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(FailureResponse);
+    }
+  }
+};
+
 export const ReviewController = {
   createReview,
   getAllReviewsByUser,
   getAllReviews,
   updateReview,
+  removeReview,
 };
