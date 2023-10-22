@@ -57,7 +57,7 @@ const updateUser = async (user, data) => {
 
 const patchUser = async (user, data) => {
   try {
-    const newUser = await users.findOneAndUpdate(user, data);
+    const newUser = await users.findOneAndUpdate(user, data, { new: true });
     return newUser;
   } catch (err) {
     throw err;
