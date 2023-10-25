@@ -49,7 +49,9 @@ const updateReview = async (data) => {
   try {
     const id = data.id;
     delete data.id;
-    const newReview = await reviews.findByIdAndUpdate(id, data);
+    const newReview = await reviews.findByIdAndUpdate(id, data, {
+      runValidators: true,
+    });
     return newReview;
   } catch (err) {
     throw err;

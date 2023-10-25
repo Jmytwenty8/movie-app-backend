@@ -53,6 +53,9 @@ const getAllReviews = async () => {
 
 const updateReview = async (data) => {
   try {
+    if (!data.rating || !data.description) {
+      throw new AppError("Please provide all details", StatusCodes.BAD_REQUEST);
+    }
     const updatedReview = await ReviewRepository.updateReview(data);
     return updatedReview.toObject();
   } catch (err) {
