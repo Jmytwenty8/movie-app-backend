@@ -11,7 +11,7 @@ const schemaObject = {
   },
   totalSeats: {
     type: Number,
-    default: 100,
+    default: 25,
   },
   price: {
     type: Number,

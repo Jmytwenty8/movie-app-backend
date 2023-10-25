@@ -26,6 +26,7 @@ const userSchemaObject = {
   number: {
     type: Number,
     required: [true, "Number cannot be empty"],
+    length: 10,
   },
   wallet: {
     type: Number,
@@ -34,6 +35,7 @@ const userSchemaObject = {
   password: {
     type: String,
     required: [true, "Password cannot be empty"],
+    minlength: [8, "Password must be at least 8 characters"],
   },
 };
 

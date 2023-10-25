@@ -12,6 +12,7 @@ const getVacantSeats = async (req, res) => {
       theaterId: req.body.theaterId,
       showtime: req.body.showtime,
       movieId: req.body.movieId,
+      reservationDate: req.body.reservationDate,
     });
     SuccessResponse.message = "Vacant Seats Found";
     SuccessResponse.data = vacantSeatList;
@@ -47,6 +48,10 @@ const cancelBooking = async (req, res) => {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
       res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
     } else {
       FailureResponse.message = "Booking not canceled due to internal error";
       FailureResponse.error = err;
@@ -66,6 +71,7 @@ const createBooking = async (req, res) => {
       theaterId: req.body.theaterId,
       showtime: req.body.showtime,
       seats: req.body.seats,
+      reservationDate: req.body.reservationDate,
       email: tokenizedEmail,
     });
     SuccessResponse.message = "Booking created successfully";

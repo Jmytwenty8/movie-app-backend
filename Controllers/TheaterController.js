@@ -72,7 +72,6 @@ const removeTheater = async (req, res) => {
     const theater = {
       _id: req.body.id,
     };
-
     const response = await TheaterService.removeTheater(theater);
     SuccessResponse.message = "Theater Removed";
     SuccessResponse.data = response;

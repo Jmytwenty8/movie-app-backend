@@ -8,7 +8,7 @@ const createMovie = async (req, res) => {
   try {
     const response = await MovieService.createMovie({
       name: req.body.name,
-      imageUrl: req.body.image,
+      imageUrl: req.body.imageUrl,
       description: req.body.description,
       imdb: req.body.imdb,
       runtime: req.body.runtime,
@@ -21,6 +21,10 @@ const createMovie = async (req, res) => {
     if (err instanceof AppError) {
       FailureResponse.message = err.message;
       res.status(err.statusCode).json(FailureResponse);
+    } else if (err.name === "ValidationError") {
+      const message = Object.values(err.errors).map((value) => value.message);
+      FailureResponse.message = message;
+      res.status(StatusCodes.NOT_ACCEPTABLE).json(FailureResponse);
     } else {
       FailureResponse.message = "Movie not created due to some internal error";
       FailureResponse.error = err;

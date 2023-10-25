@@ -1,37 +1,67 @@
 import { users } from "../Models/Users.js";
 
 const getUserByEmail = async (data) => {
-  const user = await users.findOne({ email: data.email });
-  return user;
+  try {
+    const user = await users.findOne({ email: data.email });
+    return user;
+  } catch (err) {
+    throw err;
+  }
 };
 
-const getUserById = async (data) => {
-  const user = await users.findById(data.id);
-  return user;
+const getAllUsers = async () => {
+  try {
+    const allUsers = await users.find({});
+    return allUsers;
+  } catch (err) {
+    throw err;
+  }
+};
+
+const getUserById = async (id) => {
+  try {
+    const user = await users.findById(id);
+    return user;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const createUser = async (data) => {
-  const user = await users.create(data);
-  return user;
+  try {
+    const user = await users.create(data);
+    return user;
+  } catch (err) {
+    throw err;
+  }
 };
 
-const removeUser = async (user) => {
-  const email = {
-    email: user.email,
-  };
-  const removedUser = await users.deleteOne(email);
-  return removedUser;
+const removeUser = async (id) => {
+  try {
+    const removedUser = await users.findByIdAndDelete(id);
+    return removedUser;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const updateUser = async (user, data) => {
-  await users.deleteOne(user);
-  const newUser = await users.create(data);
-  return newUser;
+  try {
+    await users.deleteOne(user);
+    const newUser = await users.create(data);
+    return newUser;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const patchUser = async (user, data) => {
-  const newUser = await users.findOneAndUpdate(user, data);
-  return newUser;
+  try {
+    const newUser = await users.findOneAndUpdate(user, data, { new: true });
+    return newUser;
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const UserRepository = {
@@ -41,4 +71,5 @@ export const UserRepository = {
   removeUser,
   updateUser,
   patchUser,
+  getAllUsers,
 };

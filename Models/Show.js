@@ -11,6 +11,14 @@ const schemaObject = {
     type: String,
     enum: ["morning", "afternoon", "evening", "night"],
   },
+  startDate: {
+    type: Date,
+    required: true,
+  },
+  endDate: {
+    type: Date,
+    required: true,
+  },
 };
 
 const showSchema = new mongoose.Schema(schemaObject);

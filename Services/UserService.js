@@ -3,7 +3,6 @@ import { comparePassword } from "../Utils/Auth.js";
 import { AppError } from "../Utils/AppError.js";
 import { UserRepository } from "../Repository/UserRepository.js";
 import { hashPassword } from "../Utils/HashPassword.js";
-import bcrypt from "bcrypt";
 
 const signIn = async (data) => {
   try {
@@ -45,7 +44,7 @@ const signUp = async (data) => {
 
 const removeUser = async (data) => {
   try {
-    const response = await UserRepository.removeUser(data);
+    const response = await UserRepository.removeUser(data.id);
     return response;
   } catch (err) {
     throw err;
@@ -92,6 +91,29 @@ const updateUser = async (data) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    const allUsers = await UserRepository.getAllUsers();
+    if (!allUsers) {
+      throw new AppError("Couldn't find users", StatusCodes.BAD_REQUEST);
+    }
+    return allUsers;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const getUserById = async (data) => {
+  try {
+    const user = await UserRepository.getUserById(data.id);
+    if (!user) {
+      throw new AppError("Couldn't find user", StatusCodes.NOT_FOUND);
+    }
+    return user;
+  } catch (err) {
+    throw err;
+  }
+};
 export const UserService = {
   signIn,
   signUp,
@@ -99,4 +121,6 @@ export const UserService = {
   updateUser,
   patchUser,
   getUser,
+  getAllUsers,
+  getUserById,
 };

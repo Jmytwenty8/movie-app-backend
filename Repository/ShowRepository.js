@@ -16,7 +16,8 @@ const createShow = async (data) => {
 };
 
 const removeShow = async (data) => {
-  const removedShow = await shows.deleteOne(data);
+  const show = await shows.findById(data._id);
+  const removedShow = await shows.deleteOne(show);
   return removedShow;
 };
 

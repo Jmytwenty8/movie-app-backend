@@ -4,6 +4,7 @@ import { BookingRepository } from "../Repository/BookingRepository.js";
 import { TheaterRepository } from "../Repository/TheaterRepository.js";
 import { SeatService } from "../Services/SeatService.js";
 import { UserRepository } from "../Repository/UserRepository.js";
+import dayjs from "dayjs";
 
 const getOneBooking = async (data) => {
   try {
@@ -59,7 +60,9 @@ const bookedSeats = async (data) => {
       return (
         seat.movieId.toString() == data.movieId &&
         seat.theaterId.toString() == data.theaterId &&
-        seat.showtime.toString() == data.showtime
+        seat.showtime.toString() == data.showtime &&
+        dayjs(seat.reservationDate).format("DD-MM-YYYY") ==
+          dayjs(data.reservationDate).format("DD-MM-YYYY")
       );
     });
     filteredBookings.map((seat) => {
@@ -82,6 +85,7 @@ const getAllVacantSeats = async (data) => {
       theaterId: data.theaterId,
       showtime: data.showtime,
       movieId: data.movieId,
+      reservationDate: data.reservationDate,
     });
     const vacantSeats = await SeatService.getAllVacantSeats(filledSeatIds);
     if (!vacantSeats) {
@@ -155,7 +159,7 @@ const removeBooking = async (data) => {
       id: booking.theaterId,
     });
     const amountToBeRefunded = theater.price * booking.seats.length;
-    const user = await UserRepository.getUserById({ id: booking.userId });
+    const user = await UserRepository.getUserById(booking.userId);
     const removedBooking = await BookingRepository.removeBooking(data);
     await UserRepository.patchUser(user, {
       wallet: user.wallet + amountToBeRefunded,

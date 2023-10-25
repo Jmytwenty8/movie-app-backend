@@ -11,8 +11,12 @@ const getAllMovies = async () => {
 };
 
 const createMovie = async (data) => {
-  const movie = await movies.create(data);
-  return movie;
+  try {
+    const movie = await movies.create(data);
+    return movie;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const removeMovie = async (data) => {

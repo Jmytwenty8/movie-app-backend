@@ -3,6 +3,7 @@ import { BookingController } from "../Controllers/BookingController.js";
 import {
   tokenVerification,
   authorizeUserForMovieActions,
+  authorizeUserForUserActionsForAdmin,
 } from "../Middlewares/AuthMiddleware.js";
 
 const bookingRouter = express.Router();
@@ -13,7 +14,12 @@ bookingRouter.get(
   BookingController.getAllBookingsByUser
 );
 
-bookingRouter.get("/allbookings", BookingController.getAllBookings);
+bookingRouter.get(
+  "/allbookings",
+  tokenVerification,
+  // authorizeUserForUserActionsForAdmin("admin"),
+  BookingController.getAllBookings
+);
 
 bookingRouter.post(
   "/cancel",
