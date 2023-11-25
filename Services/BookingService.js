@@ -4,6 +4,7 @@ import { BookingRepository } from "../Repository/BookingRepository.js";
 import { TheaterRepository } from "../Repository/TheaterRepository.js";
 import { SeatService } from "../Services/SeatService.js";
 import { UserRepository } from "../Repository/UserRepository.js";
+import { ReviewService } from "./ReviewService.js";
 import dayjs from "dayjs";
 
 const getOneBooking = async (data) => {
@@ -107,12 +108,12 @@ const createBooking = async (data) => {
       const id = await SeatService.getSeatIdByRowAndColumn(row, column);
       return id;
     });
-
     const seatIds = await Promise.all(seatIdPromise);
     const vacantSeats = await BookingService.getAllVacantSeats({
       theaterId: data.theaterId,
       movieId: data.movieId,
       showtime: data.showtime,
+      reservationDate: data.reservationDate,
     });
     const checkAllowedSeats = vacantSeats.filter((seat) => {
       return seatIds.includes(seat._id.toString());
@@ -138,6 +139,7 @@ const createBooking = async (data) => {
       );
     }
     data.userId = user._id;
+    data.amount = amountToBeCharged;
     delete data.email;
     const booking = await BookingRepository.createBooking(data);
     if (!booking) {
@@ -155,17 +157,23 @@ const createBooking = async (data) => {
 const removeBooking = async (data) => {
   try {
     const booking = await BookingRepository.getOneBooking(data);
-    const theater = await TheaterRepository.getOneTheater({
-      id: booking.theaterId,
-    });
-    const amountToBeRefunded = theater.price * booking.seats.length;
+    const amountToBeRefunded = booking.amount;
     const user = await UserRepository.getUserById(booking.userId);
-    const removedBooking = await BookingRepository.removeBooking(data);
-    await UserRepository.patchUser(user, {
-      wallet: user.wallet + amountToBeRefunded,
+    if (dayjs(booking.reservationDate).isAfter(dayjs())) {
+      await UserRepository.patchUser(user, {
+        wallet: user.wallet + amountToBeRefunded,
+      });
+    }
+    const allReviews = await ReviewService.getAllReviews();
+    allReviews.forEach(async (review) => {
+      if (review.bookingId.equals(booking._id)) {
+        await ReviewService.removeReview({ id: review._id });
+      }
     });
+    const removedBooking = await BookingRepository.removeBooking(data);
     return removedBooking;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };

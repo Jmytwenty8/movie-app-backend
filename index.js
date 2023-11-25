@@ -4,6 +4,8 @@ import { connect } from "./Configs/mongo-config.js";
 import { router } from "./Routes/index.js";
 import cookie from "cookie-parser";
 import cors from "cors";
+import morgan from "morgan";
+
 const app = express();
 
 const corsOptions = {
@@ -15,6 +17,7 @@ app.use(cors(corsOptions));
 app.use(cookie());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api", router.rootRouter);
+app.use(morgan("dev"));
 
 app.listen(serverConfigs.PORT, async (err, res) => {
   if (err) {

@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
 import { MovieRepository } from "../Repository/MovieRepository.js";
 import { ShowService } from "./ShowService.js";
+import { WishlistService } from "./WishlistService.js";
 
 const getOneMovie = async (data) => {
   try {
@@ -48,6 +49,18 @@ const createMovie = async (data) => {
 
 const removeMovie = async (data) => {
   try {
+    const allShows = await ShowService.getAllShows();
+    allShows.map(async (show) => {
+      if (show.movieId.equals(data._id)) {
+        await ShowService.removeShow({ _id: show._id });
+      }
+    });
+    const allWishlists = await WishlistService.getAllWishlist();
+    allWishlists.map(async (wishlist) => {
+      if (wishlist.movieId.equals(data._id)) {
+        await WishlistService.removeWishlist({ id: wishlist._id });
+      }
+    });
     const removedMovie = await MovieRepository.removeMovie(data);
     return removedMovie;
   } catch (err) {

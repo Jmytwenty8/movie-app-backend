@@ -1,6 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
 import { ShowRepository } from "../Repository/ShowRepository.js";
+import { BookingService } from "./BookingService.js";
+import { UserService } from "./UserService.js";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween.js";
+
+dayjs.extend(isBetween);
 
 const getOneShow = async (data) => {
   try {
@@ -41,9 +47,31 @@ const createShow = async (data) => {
 
 const removeShow = async (data) => {
   try {
+    const show = await ShowRepository.getOneShow({ id: data._id });
+    const allBookings = await BookingService.getAllBookings();
+    allBookings.forEach(async (booking) => {
+      if (
+        booking.showtime === show.showtime &&
+        dayjs(booking.reservationDate).isBetween(
+          dayjs(show.startDate),
+          dayjs(show.endDate),
+          null,
+          "[]"
+        ) &&
+        booking.theaterId.equals(show.theaterId) &&
+        booking.movieId.equals(show.movieId)
+      ) {
+        const user = await UserService.getUserById({ id: booking.userId });
+        await BookingService.removeBooking({
+          id: booking._id,
+          email: user.email,
+        });
+      }
+    });
     const removedShow = await ShowRepository.removeShow(data);
     return removedShow;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };
