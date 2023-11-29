@@ -5,22 +5,26 @@ import FailureResponse from "../Utils/FailureResponse.js";
 import { UserRepository } from "../Repository/UserRepository.js";
 
 export const tokenVerification = (req, res, next) => {
-  const token = req.cookies.auth;
-  if (!token) {
-    FailureResponse.message = "Token is required";
-    FailureResponse.error.StatusCodes = StatusCodes.BAD_REQUEST;
-    return res.status(StatusCodes.BAD_REQUEST).json(FailureResponse);
-  }
-
-  Jwt.verify(token, serverConfigs.SECRET_KEY, (err) => {
-    if (err) {
-      FailureResponse.message = "Token verification Failed";
-      FailureResponse.error.StatusCodes = StatusCodes.UNAUTHORIZED;
-      return res.status(StatusCodes.UNAUTHORIZED).json(FailureResponse);
-    } else {
-      next();
+  try {
+    const token = req.cookies.auth;
+    if (!token) {
+      FailureResponse.message = "Token is required";
+      FailureResponse.error.StatusCodes = StatusCodes.BAD_REQUEST;
+      return res.status(StatusCodes.BAD_REQUEST).json(FailureResponse);
     }
-  });
+
+    Jwt.verify(token, serverConfigs.SECRET_KEY, (err) => {
+      if (err) {
+        FailureResponse.message = "Token verification Failed";
+        FailureResponse.error.StatusCodes = StatusCodes.UNAUTHORIZED;
+        return res.status(StatusCodes.UNAUTHORIZED).json(FailureResponse);
+      } else {
+        next();
+      }
+    });
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export const authorizeUserForUserActions = (role) => {
@@ -72,19 +76,25 @@ export const authorizeUserForUserActionsForAdmin = (role) => {
 };
 
 export const authorizeUserForMovieActions = (role) => {
-  return async (req, res, next) => {
-    const tokenizedEmail = Jwt.verify(
-      req.cookies.auth,
-      serverConfigs.SECRET_KEY
-    );
+  try {
+    return async (req, res, next) => {
+      const tokenizedEmail = Jwt.verify(
+        req.cookies.auth,
+        serverConfigs.SECRET_KEY
+      );
 
-    const user = await UserRepository.getUserByEmail({ email: tokenizedEmail });
-    if (role !== user.role) {
-      FailureResponse.message = "User not authorized to complete the task";
-      FailureResponse.error.StatusCodes = StatusCodes.FORBIDDEN;
-      return res.status(StatusCodes.FORBIDDEN).json(FailureResponse);
-    } else {
-      next();
-    }
-  };
+      const user = await UserRepository.getUserByEmail({
+        email: tokenizedEmail,
+      });
+      if (role !== user.role) {
+        FailureResponse.message = "User not authorized to complete the task";
+        FailureResponse.error.StatusCodes = StatusCodes.FORBIDDEN;
+        return res.status(StatusCodes.FORBIDDEN).json(FailureResponse);
+      } else {
+        next();
+      }
+    };
+  } catch (err) {
+    console.error(err);
+  }
 };

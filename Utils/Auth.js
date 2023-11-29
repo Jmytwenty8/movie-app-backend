@@ -15,6 +15,10 @@ export const comparePassword = async (suppliedPassword, databasePassword) => {
 };
 
 export const createToken = async (email) => {
-  const token = Jwt.sign(email, serverConfigs.SECRET_KEY);
-  return token;
+  try {
+    const token = Jwt.sign(email, serverConfigs.SECRET_KEY);
+    return token;
+  } catch (err) {
+    throw err;
+  }
 };

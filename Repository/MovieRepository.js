@@ -1,13 +1,21 @@
 import { movies } from "../Models/Movies.js";
 
 const getOneMovie = async (data) => {
-  const movie = await movies.findOne({ _id: data.id });
-  return movie;
+  try {
+    const movie = await movies.findOne({ _id: data.id });
+    return movie;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const getAllMovies = async () => {
-  const moviesList = await movies.find({});
-  return moviesList;
+  try {
+    const moviesList = await movies.find({});
+    return moviesList;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const createMovie = async (data) => {
@@ -20,19 +28,31 @@ const createMovie = async (data) => {
 };
 
 const removeMovie = async (data) => {
-  const removedMovie = await movies.deleteOne(data);
-  return removedMovie;
+  try {
+    const removedMovie = await movies.deleteOne(data);
+    return removedMovie;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const updateMovie = async (movie, data) => {
-  await movies.deleteOne(movie);
-  const newMovie = await movies.create(data);
-  return newMovie;
+  try {
+    await movies.deleteOne(movie);
+    const newMovie = await movies.create(data);
+    return newMovie;
+  } catch (err) {
+    throw err;
+  }
 };
 
 const patchMovie = async (movie, data) => {
-  const newMovie = await movies.findOneAndUpdate(movie, data);
-  return newMovie;
+  try {
+    const newMovie = await movies.findOneAndUpdate(movie, data);
+    return newMovie;
+  } catch (err) {
+    throw err;
+  }
 };
 
 export const MovieRepository = {

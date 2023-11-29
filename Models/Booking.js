@@ -22,6 +22,9 @@ const schemaObject = {
   reservationDate: {
     type: Date,
   },
+  amount: {
+    type: Number,
+  },
 };
 
 const bookingSchema = new mongoose.Schema(schemaObject);

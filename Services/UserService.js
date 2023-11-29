@@ -3,6 +3,9 @@ import { comparePassword } from "../Utils/Auth.js";
 import { AppError } from "../Utils/AppError.js";
 import { UserRepository } from "../Repository/UserRepository.js";
 import { hashPassword } from "../Utils/HashPassword.js";
+import { BookingRepository } from "../Repository/BookingRepository.js";
+import { WishlistRepository } from "../Repository/WishlistRepository.js";
+import { ReviewRepository } from "../Repository/ReviewRepository.js";
 
 const signIn = async (data) => {
   try {
@@ -44,9 +47,28 @@ const signUp = async (data) => {
 
 const removeUser = async (data) => {
   try {
+    const allBookingData = await BookingRepository.getAllBookings();
+    allBookingData.map(async (booking) => {
+      if (booking.userId.equals(data.id)) {
+        await BookingRepository.removeBooking({ id: booking._id });
+      }
+    });
+    const allWishlistData = await WishlistRepository.getAllWishlists();
+    allWishlistData.map(async (wishlist) => {
+      if (wishlist.userId.equals(data.id)) {
+        await WishlistRepository.removeWishlist(wishlist._id);
+      }
+    });
+    const allReviewData = await ReviewRepository.getAllReviews();
+    allReviewData.map(async (review) => {
+      if (review.userId.equals(data.id)) {
+        await ReviewRepository.removeReview(review._id);
+      }
+    });
     const response = await UserRepository.removeUser(data.id);
     return response;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };

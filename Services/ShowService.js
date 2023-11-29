@@ -1,6 +1,12 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
 import { ShowRepository } from "../Repository/ShowRepository.js";
+import { BookingService } from "./BookingService.js";
+import { UserService } from "./UserService.js";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween.js";
+
+dayjs.extend(isBetween);
 
 const getOneShow = async (data) => {
   try {
@@ -29,6 +35,24 @@ const getAllShows = async () => {
 
 const createShow = async (data) => {
   try {
+    const allShows = await ShowRepository.getAllShows();
+    allShows.forEach((show) => {
+      if (
+        show.theaterId.equals(data.theaterId) &&
+        data.showtime === show.showtime &&
+        dayjs(data.startDate).isBetween(
+          dayjs(show.startDate),
+          dayjs(show.endDate),
+          null,
+          "[]"
+        )
+      ) {
+        throw new AppError(
+          "Show already exists for either same showtime or same theater",
+          StatusCodes.BAD_REQUEST
+        );
+      }
+    });
     const show = await ShowRepository.createShow(data);
     if (!show) {
       throw new AppError("Show is not created", StatusCodes.NOT_IMPLEMENTED);
@@ -41,9 +65,31 @@ const createShow = async (data) => {
 
 const removeShow = async (data) => {
   try {
+    const show = await ShowRepository.getOneShow({ id: data._id });
+    const allBookings = await BookingService.getAllBookings();
+    allBookings.forEach(async (booking) => {
+      if (
+        booking.showtime === show.showtime &&
+        dayjs(booking.reservationDate).isBetween(
+          dayjs(show.startDate),
+          dayjs(show.endDate),
+          null,
+          "[]"
+        ) &&
+        booking.theaterId.equals(show.theaterId) &&
+        booking.movieId.equals(show.movieId)
+      ) {
+        const user = await UserService.getUserById({ id: booking.userId });
+        await BookingService.removeBooking({
+          id: booking._id,
+          email: user.email,
+        });
+      }
+    });
     const removedShow = await ShowRepository.removeShow(data);
     return removedShow;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };

@@ -21,6 +21,18 @@ const removeWishlist = async (data) => {
   }
 };
 
+const getAllWishlist = async () => {
+  try {
+    const wishlists = await WishlistRepository.getAllWishlists();
+    if (!wishlists) {
+      throw new AppError("Couldn't get any wishlist", StatusCodes.NO_CONTENT);
+    }
+    return wishlists;
+  } catch (err) {
+    throw err;
+  }
+};
+
 const getAllWishlistByUser = async (data) => {
   try {
     const user = await UserRepository.getUserByEmail({ email: data.email });
@@ -43,4 +55,5 @@ export const WishlistService = {
   createWishlist,
   removeWishlist,
   getAllWishlistByUser,
+  getAllWishlist,
 };

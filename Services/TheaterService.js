@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
 import { TheaterRepository } from "../Repository/TheaterRepository.js";
+import { ShowService } from "./ShowService.js";
 
 const getOneTheater = async (data) => {
   try {
@@ -41,9 +42,18 @@ const createTheater = async (data) => {
 
 const removeTheater = async (data) => {
   try {
+    const theater = await TheaterRepository.getOneTheater({ id: data._id });
+    const allShows = await ShowService.getAllShows();
+    allShows.map(async (show) => {
+      if (show.theaterId.equals(theater._id)) {
+        console.log(theater._id);
+        await ShowService.removeShow({ _id: show._id });
+      }
+    });
     const removedTheater = await TheaterRepository.removeTheater(data);
     return removedTheater;
   } catch (err) {
+    console.log(err);
     throw err;
   }
 };
