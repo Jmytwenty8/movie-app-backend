@@ -35,6 +35,24 @@ const getAllShows = async () => {
 
 const createShow = async (data) => {
   try {
+    const allShows = await ShowRepository.getAllShows();
+    allShows.forEach((show) => {
+      if (
+        show.theaterId.equals(data.theaterId) &&
+        data.showtime === show.showtime &&
+        dayjs(data.startDate).isBetween(
+          dayjs(show.startDate),
+          dayjs(show.endDate),
+          null,
+          "[]"
+        )
+      ) {
+        throw new AppError(
+          "Show already exists for either same showtime or same theater",
+          StatusCodes.BAD_REQUEST
+        );
+      }
+    });
     const show = await ShowRepository.createShow(data);
     if (!show) {
       throw new AppError("Show is not created", StatusCodes.NOT_IMPLEMENTED);
