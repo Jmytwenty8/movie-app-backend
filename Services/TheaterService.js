@@ -30,6 +30,16 @@ const getAllTheaters = async () => {
 
 const createTheater = async (data) => {
   try {
+    const allTheaters = await TheaterRepository.getAllTheaters();
+    const theaterExists = allTheaters.find((theater) => {
+      return (
+        theater.name.toLowerCase() === data.name.toLowerCase() &&
+        theater.location.toLowerCase() === data.location.toLowerCase()
+      );
+    });
+    if (theaterExists) {
+      throw new AppError("Theater already exists", StatusCodes.BAD_REQUEST);
+    }
     const theater = await TheaterRepository.createTheater(data);
     if (!theater) {
       throw new AppError("Theater is not created", StatusCodes.NOT_IMPLEMENTED);
@@ -46,7 +56,6 @@ const removeTheater = async (data) => {
     const allShows = await ShowService.getAllShows();
     allShows.map(async (show) => {
       if (show.theaterId.equals(theater._id)) {
-        console.log(theater._id);
         await ShowService.removeShow({ _id: show._id });
       }
     });

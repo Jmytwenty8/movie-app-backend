@@ -5,6 +5,7 @@ import { router } from "./Routes/index.js";
 import cookie from "cookie-parser";
 import cors from "cors";
 import morgan from "morgan";
+import nodemailer from "nodemailer";
 
 const app = express();
 
@@ -12,6 +13,18 @@ const corsOptions = {
   origin: "http://localhost:5173",
   credentials: true,
 };
+
+export const transporter = nodemailer.createTransport({
+  service: serverConfigs.MAIL_SERVICE,
+  host: serverConfigs.MAIL_HOST,
+  port: serverConfigs.MAIL_PORT,
+  secure: false,
+  auth: {
+    user: serverConfigs.MAIL,
+    pass: serverConfigs.MAIL_APP_PASSWORD,
+  },
+});
+
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookie());

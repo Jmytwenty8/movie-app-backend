@@ -17,7 +17,14 @@ userRouter.post(
   UserController.removeUser
 );
 userRouter.post("/patch", tokenVerification, UserController.patchUser);
+userRouter.post(
+  "/patchPassword",
+  tokenVerification,
+  UserController.patchUserPassword
+);
 userRouter.post("/getUser", UserController.getUser);
+userRouter.post("/forget", UserController.forgetPassword);
+userRouter.post("/resetPassword", UserController.resetPassword);
 userRouter.put(
   "/update",
   tokenVerification,

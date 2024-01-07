@@ -1,11 +1,13 @@
 import { StatusCodes } from "http-status-codes";
-import { comparePassword } from "../Utils/Auth.js";
+import { comparePassword, createToken } from "../Utils/Auth.js";
 import { AppError } from "../Utils/AppError.js";
 import { UserRepository } from "../Repository/UserRepository.js";
 import { hashPassword } from "../Utils/HashPassword.js";
 import { BookingRepository } from "../Repository/BookingRepository.js";
 import { WishlistRepository } from "../Repository/WishlistRepository.js";
 import { ReviewRepository } from "../Repository/ReviewRepository.js";
+import { transporter } from "../index.js";
+import { serverConfigs } from "../Configs/server-config.js";
 
 const signIn = async (data) => {
   try {
@@ -14,7 +16,6 @@ const signIn = async (data) => {
       throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
     }
     if (!(await comparePassword(data.password, user.password))) {
-      console.log("bye bye");
       throw new AppError("Password Incorrect", StatusCodes.BAD_REQUEST);
     }
     return user.toObject();
@@ -40,6 +41,26 @@ const signUp = async (data) => {
   try {
     const user = await UserRepository.createUser(data);
     return user.toObject();
+  } catch (err) {
+    throw err;
+  }
+};
+
+const forgetPassword = async (data) => {
+  try {
+    const user = await UserRepository.getUserByEmail(data);
+    if (!user) {
+      throw new AppError("Couldn't find the user", StatusCodes.BAD_REQUEST);
+    }
+    const token = await createToken(user.email);
+    const message = `${serverConfigs.URL}/user/${token}`;
+    const mailDetails = {
+      from: serverConfigs.MAIL,
+      to: user.email,
+      subject: "Reset Password",
+      text: message,
+    };
+    await transporter.sendMail(mailDetails);
   } catch (err) {
     throw err;
   }
@@ -145,4 +166,5 @@ export const UserService = {
   getUser,
   getAllUsers,
   getUserById,
+  forgetPassword,
 };

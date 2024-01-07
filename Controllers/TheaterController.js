@@ -5,6 +5,15 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
 
 const createTheater = async (req, res) => {
+  if (!req.body?.name.trim() || !req.body?.location.trim()) {
+    FailureResponse.message = "Invalid Data Entered";
+    return res.status(StatusCodes.BAD_REQUEST).json(FailureResponse);
+  }
+  Object.keys(req.body).forEach((prop) => {
+    if (typeof req.body[prop] === "string") {
+      req.body[prop] = req.body[prop].trim();
+    }
+  });
   try {
     const response = await TheaterService.createTheater({
       name: req.body.name,

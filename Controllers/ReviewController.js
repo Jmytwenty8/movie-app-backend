@@ -8,6 +8,15 @@ import { serverConfigs } from "../Configs/server-config.js";
 import { UserService } from "../Services/UserService.js";
 
 const createReview = async (req, res) => {
+  if (!req.body.description.trim() || !req.body.rating.trim()) {
+    FailureResponse.message = "Invalid Request";
+    return res.status(StatusCodes.BAD_REQUEST).json(FailureResponse);
+  }
+  Object.keys(req.body).forEach((prop) => {
+    if (typeof req.body[prop] === "string") {
+      req.body[prop] = req.body[prop].trim();
+    }
+  });
   try {
     const tokenizedEmail = Jwt.verify(
       req.cookies.auth,

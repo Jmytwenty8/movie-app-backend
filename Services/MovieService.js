@@ -37,6 +37,16 @@ const getAllMovies = async () => {
 
 const createMovie = async (data) => {
   try {
+    if (data.imdb > 10 || data.imdb < 0 || data.runtime < 0) {
+      throw new AppError("Invalid Data", StatusCodes.BAD_REQUEST);
+    }
+    const allMovies = await MovieRepository.getAllMovies();
+    const movieExists = allMovies.find((movie) => {
+      return movie.name.toLowerCase() === data.name.toLowerCase();
+    });
+    if (movieExists) {
+      throw new AppError("Movie already exists", StatusCodes.BAD_REQUEST);
+    }
     const movie = await MovieRepository.createMovie(data);
     if (!movie) {
       throw new AppError("Movie is not created", StatusCodes.BAD_REQUEST);

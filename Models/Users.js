@@ -2,18 +2,26 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { serverConfigs } from "../Configs/server-config.js";
 
+const noSpacesValidator = {
+  validator: function (value) {
+    return !/^\s|\s$/.test(value);
+  },
+  message: "Field cannot contain blank spaces at the start or end",
+};
+
 const userSchemaObject = {
   name: {
-    type: "String",
+    type: String,
     required: [true, "Name cannot be empty"],
+    validate: noSpacesValidator,
   },
   role: {
-    type: "String",
+    type: String,
     enum: ["user", "admin"],
     default: "user",
   },
   email: {
-    type: "String",
+    type: String,
     unique: true,
     match: [
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -22,11 +30,16 @@ const userSchemaObject = {
     trim: true,
     lowercase: true,
     required: [true, "Email cannot be empty"],
+    validate: noSpacesValidator,
   },
   number: {
-    type: Number,
-    required: [true, "Number cannot be empty"],
-    length: 10,
+    type: String,
+    validate: {
+      validator: function (number) {
+        return /^\+91(?!0)([\d\s.-]{10})$/.test(number);
+      },
+      message: "Please enter a valid phone number",
+    },
   },
   wallet: {
     type: Number,
@@ -34,8 +47,15 @@ const userSchemaObject = {
   },
   password: {
     type: String,
+    validate: {
+      validator: function (value) {
+        return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(value);
+      },
+      message:
+        "Password must be at least 8 characters long and include both letters and digits",
+    },
     required: [true, "Password cannot be empty"],
-    minlength: [8, "Password must be at least 8 characters"],
+    validate: noSpacesValidator,
   },
 };
 
@@ -52,5 +72,7 @@ userSchema.pre("save", async function (next) {
     console.error(err);
   }
 });
+
+userSchema.set("validateBeforeSave", true);
 
 export const users = mongoose.model("users", userSchema);

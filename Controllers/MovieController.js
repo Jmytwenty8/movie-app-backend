@@ -5,6 +5,22 @@ import { StatusCodes } from "http-status-codes";
 import { AppError } from "../Utils/AppError.js";
 
 const createMovie = async (req, res) => {
+  if (
+    !req.body?.name.trim() ||
+    !req.body?.imageUrl.trim() ||
+    !req.body?.description.trim() ||
+    !req.body?.imdb.trim() ||
+    !req.body?.runtime.trim() ||
+    req.body?.actors.length === 0
+  ) {
+    FailureResponse.message = "Invalid Request";
+    return res.status(StatusCodes.BAD_REQUEST).json(FailureResponse);
+  }
+  Object.keys(req.body).forEach((prop) => {
+    if (typeof req.body[prop] === "string") {
+      req.body[prop] = req.body[prop].trim();
+    }
+  });
   try {
     const response = await MovieService.createMovie({
       name: req.body.name,
